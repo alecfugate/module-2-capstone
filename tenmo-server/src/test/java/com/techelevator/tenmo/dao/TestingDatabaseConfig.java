@@ -1,4 +1,4 @@
-package com.techelevator.dao;
+package com.techelevator.tenmo.dao;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
