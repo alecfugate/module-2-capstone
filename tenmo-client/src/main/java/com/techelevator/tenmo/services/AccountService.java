@@ -30,7 +30,7 @@ public class AccountService {
         BigDecimal balance = null;
 
         try {
-            balance = restTemplate.exchange(baseUrl + "/balance",
+            balance = restTemplate.exchange(baseUrl + "account/balance",
                     HttpMethod.GET,
                     entity,
                     BigDecimal.class

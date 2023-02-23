@@ -206,20 +206,20 @@ public class App {
 
     private Transfer createTransfer (int accountChoiceUserId, BigDecimal amount, int transferTypeId, int transferStatusId){
         // method to handle sendbucks and request bucks
-        int accountToId;
-        int accountFromId;
+        Account accountToId;
+        Account accountFromId;
         // get Account ID from current user and current choice user
         if(transferTypeId==2) {
-            accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccount_id();
-            accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccount_id();
+            accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
+            accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
         } else {
-            accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccount_id();
-            accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccount_id();
+            accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
+            accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
         }
 
         Transfer transfer = new Transfer();
-        transfer.setAccountFrom(accountFromId);
-        transfer.setAccountTo(accountToId);
+        transfer.setAccountFrom(accountFromId.getAccount_id());
+        transfer.setAccountTo(accountToId.getAccount_id());
         transfer.setAmount(amount);
         transfer.setTransferStatusId(transferStatusId);
         transfer.setTransferTypeId(transferTypeId);

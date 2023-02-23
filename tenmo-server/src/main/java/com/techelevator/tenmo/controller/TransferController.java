@@ -2,13 +2,12 @@ package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.exceptions.InsufficientFundsException;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +33,19 @@ public class TransferController {
     @RequestMapping(path="/transfers/user/{userId}", method = RequestMethod.GET)
     public List<Transfer> getTransferByUserId(@PathVariable int userId) {
         return transferDao.getAllTransfersByUserId(userId);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(path="/transfers/{id}", method = RequestMethod.POST)
+    public void addTransfer(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFundsException {
+
+        if(transfer.getTransferStatusId()==2) {
+            // only update balance if it is approved
+            // check balance from account and update BALANCE for both account
+            accountDao.checkAndUpdateBalance(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
+        }
+        transferDao.createTransfer(transfer);
+
     }
 
 

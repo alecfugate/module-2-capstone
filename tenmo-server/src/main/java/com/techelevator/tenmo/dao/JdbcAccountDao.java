@@ -4,6 +4,8 @@ import com.techelevator.tenmo.model.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import com.techelevator.tenmo.exceptions.InsufficientFundsException;
 
 import java.math.BigDecimal;
 
@@ -48,6 +50,33 @@ public class JdbcAccountDao implements AccountDao {
         } else {
             return null;
         }
+    }
+
+    @Override
+    @Transactional
+    public void checkAndUpdateBalance(BigDecimal amount, int accountIdFrom, int accountIdTo) throws  InsufficientFundsException{
+        checkBalance(amount, accountIdFrom);
+        String sql = "UPDATE accounts " +
+                "SET balance = balance - ? " + // new updated sender balance
+                "WHERE account_id = ?; ";
+        jdbcTemplate.update(sql, amount, accountIdFrom);
+
+        sql = "UPDATE accounts " +
+                "SET balance = balance + ? " + // new updated sender balance
+                "WHERE account_id = ?; ";
+        jdbcTemplate.update(sql, amount, accountIdTo);
+    }
+
+    private void checkBalance(BigDecimal amount, int accountIdFrom) throws InsufficientFundsException {
+        String sql = "SELECT (balance >= ?) as is_valid " +
+                "FROM accounts " +
+                "WHERE account_id = ?;";
+        SqlRowSet isValid = jdbcTemplate.queryForRowSet(sql, amount , accountIdFrom);
+        if (isValid.next()) {
+            if (!isValid.getBoolean("is_valid"))
+                throw new InsufficientFundsException();
+        }
+
     }
 
     private Account mapRowToAccount(SqlRowSet rs) {
