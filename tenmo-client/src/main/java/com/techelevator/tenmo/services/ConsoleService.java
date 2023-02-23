@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
@@ -79,6 +80,48 @@ public class ConsoleService {
         }
     }
 
+
+    public Double getUserInputDouble(String prompt) {
+        Double result = null;
+        do {
+            System.out.print(prompt+": ");
+            String userInput = scanner.nextLine();
+            try {
+                result = Double.parseDouble(userInput);
+                BigDecimal bd = BigDecimal.valueOf(result);
+                if (bd.scale() < 3 && bd.compareTo(BigDecimal.ZERO) > 0) {
+                    continue;
+                } else {
+                    System.out.println("\n*** " + userInput + " has too many decimal places or is negative ***\n");
+                    result = null;
+                }
+            } catch(NumberFormatException e) {
+                System.out.println("\n*** " + userInput + " is not valid ***\n");
+            }
+        } while(result == null);
+        return result;
+    }
+
+    public Integer getUserInputInteger(String prompt) {
+        Integer result = null;
+        do {
+            System.out.print(prompt+": ");
+            String userInput = scanner.nextLine();
+            try {
+                result = Integer.parseInt(userInput);
+            } catch(NumberFormatException e) {
+                System.out.println("\n" + "*** " + userInput + " is not valid ***" + "\n");
+            }
+        } while(result == null);
+        return result;
+    }
+
+    public String getUserInput(String prompt) {
+        System.out.print(prompt+": ");
+        return scanner.nextLine();
+    }
+
+
     public void pause() {
         System.out.println("\nPress Enter to continue...");
         scanner.nextLine();
@@ -86,6 +129,15 @@ public class ConsoleService {
 
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
+    }
+
+    public void printUsers(User[] users, String userName) {
+        // list all user except current user
+        for(User user: users) {
+            if (user.getUsername().equals(userName)) continue;
+            System.out.println(user.getId() + "          " + user.getUsername());
+        }
+        System.out.println("-------------------------------");
     }
 
 }
