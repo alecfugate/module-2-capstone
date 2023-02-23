@@ -21,19 +21,10 @@ public class TransferController {
     private TransferDao transferDao;
 
     @RequestMapping(path="/history/{id}", method = RequestMethod.GET)
-    public List<Transfer> getAllTransfers(@PathVariable int id) {
-        return transferDao.getAllTransfers(id);
+    public List<Transfer> getAllTransfersForUser(@PathVariable int id) {
+        return transferDao.getAllTransfersForUser(id);
     }
 
-    @RequestMapping(path="/transfers/{id}", method = RequestMethod.GET)
-    public Transfer getTransferByTransferId(@PathVariable long id) {
-        return transferDao.getTransferById(id);
-    }
-
-    @RequestMapping(path="/transfers/user/{userId}", method = RequestMethod.GET)
-    public List<Transfer> getTransferByUserId(@PathVariable int userId) {
-        return transferDao.getAllTransfersByUserId(userId);
-    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path="/transfers/{id}", method = RequestMethod.POST)

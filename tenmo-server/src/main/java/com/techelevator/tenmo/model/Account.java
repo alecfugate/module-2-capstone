@@ -10,6 +10,13 @@ public class Account {
 
     private BigDecimal balance;
 
+    public Account(){}
+    public Account(int account_id, int user_id, BigDecimal balance){
+        this.account_id = account_id;
+        this.user_id = user_id;
+        this.balance = balance;
+    }
+
     public int getAccount_id() {
         return account_id;
     }

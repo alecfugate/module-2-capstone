@@ -14,6 +14,18 @@ public class Transfer {
     private String userFrom;
     private String userTo;
 
+    public Transfer(){}
+    public Transfer(int transferId, int transferTypeId, int statusId, int accountFrom, int accountTo, BigDecimal amount){
+        if(transferId != (Integer) null) {
+            this.transferId = transferId;
+        }
+        this.transferStatusId = statusId;
+        this.transferTypeId = transferTypeId;
+        this.accountFrom = accountFrom;
+        this.accountTo = accountTo;
+        this.amount = amount;
+    }
+
     public String getUserFrom() {
         return userFrom;
     }

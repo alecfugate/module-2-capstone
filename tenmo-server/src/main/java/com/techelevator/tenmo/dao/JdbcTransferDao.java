@@ -23,13 +23,13 @@ public class JdbcTransferDao implements TransferDao {
 
 
     @Override
-    public List<Transfer> getAllTransfers(int userId) {
+    public List<Transfer> getAllTransfersForUser(Integer userId) {
         List<Transfer> listOfTransfers = new ArrayList<>();
 
-        String sqlGetTransfers = "select * from users " +
-                "JOIN accounts ON users.user_id = accounts.user_id " +
-                "JOIN transfers ON accounts.account_id = transfers.account_from OR accounts.account_id = transfers.account_to " +
-                "WHERE accounts.account_id = ?";
+        String sqlGetTransfers = "select * from tenmo_user as tu " +
+                "JOIN account ON tu.user_id = account.user_id " +
+                "JOIN transfers as tran ON accounts.account_id = tran.account_from OR accounts.account_id = tran.account_to " +
+                "WHERE account.account_id = ?";
 
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransfers, convertedAccountID(userId));
         while (results.next()) {
@@ -41,18 +41,17 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
-    public List<Transfer> getAllTransfersByUserId(int userId) {
-        return null;
-    }
+    public Transfer getTransferById(int transferId){
+        String sql = "SELECT * from transfer" +
+                "WHERE transfer_id = ?";
 
-    @Override
-    public Transfer getTransferById(Long transferId) {
-        return null;
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
+        return mapRowToTransfer(result);
     }
 
     @Override
     public Transfer createTransfer(Transfer transfer) {
-        String sql = "INSERT INTO transfers (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 "VALUES (?, ?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -65,7 +64,7 @@ public class JdbcTransferDao implements TransferDao {
             return ps;
         }, keyHolder);
 
-        int transferId = (int) keyHolder.getKey().longValue();
+        int transferId = keyHolder.getKey().intValue();
         transfer.setTransferId(transferId);
 
         return transfer;
@@ -73,8 +72,7 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public void updateTransfer(Transfer transfer) {
-        boolean update = false;
-        String sql = "UPDATE transfers " +
+        String sql = "UPDATE transfer " +
                 "SET transfer_status_id = ? " +
                 "WHERE transfer_id = ?";
 
@@ -83,7 +81,7 @@ public class JdbcTransferDao implements TransferDao {
 
     public int convertedAccountID(int userId) {
         int accountIdConverted = 0;
-        String sqlConvertUserIdToAccountId = "SELECT account_id FROM accounts WHERE user_id = ?";
+        String sqlConvertUserIdToAccountId = "SELECT account_id FROM account WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlConvertUserIdToAccountId, userId);
         while (results.next()) {
             accountIdConverted = results.getInt("account_id");
