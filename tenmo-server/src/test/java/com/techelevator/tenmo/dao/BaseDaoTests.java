@@ -1,4 +1,4 @@
-package com.techelevator.dao;
+package com.techelevator.tenmo.dao;
 
 import org.junit.After;
 import org.junit.runner.RunWith;
