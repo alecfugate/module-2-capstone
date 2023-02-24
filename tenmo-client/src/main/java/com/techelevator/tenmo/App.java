@@ -113,16 +113,17 @@ public class App {
         if(transfers == null) {
             System.out.println("\nYou don't have any transfer history, press Enter to continue");
             return;
+        } else {
+            System.out.println("--------------------------------------------");
+            System.out.println("Transfers");
+            System.out.println("ID     From/To          Amount     Status");
+            System.out.println("--------------------------------------------");
+
+            for(Transfer transfer: transfers) {
+                printTransfer(currentUser, transfer);
+            }
         }
 
-        System.out.println("--------------------------------------------");
-        System.out.println("Transfers");
-        System.out.println("ID     From/To          Amount     Status");
-        System.out.println("--------------------------------------------");
-
-        for(Transfer transfer: transfers) {
-            printTransfer(currentUser, transfer);
-        }
 
     }
 
@@ -228,5 +229,9 @@ public class App {
         consoleService.getUserInput(message+" Press Enter to continue");
         return transfer;
     }
+
+
+
+
 
 }

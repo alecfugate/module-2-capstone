@@ -52,8 +52,8 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer createTransfer(Transfer transfer) {
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
-                "VALUES (?, ?, ?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+                "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
+//        KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, transfer.getTransferTypeId());
@@ -62,10 +62,10 @@ public class JdbcTransferDao implements TransferDao {
             ps.setInt(4, transfer.getAccountTo());
             ps.setBigDecimal(5, transfer.getAmount());
             return ps;
-        }, keyHolder);
-
-        int transferId = keyHolder.getKey().intValue();
-        transfer.setTransferId(transferId);
+        });
+//
+//        int transferId = keyHolder.getKey().intValue();
+//        transfer.setTransferId(transferId);
 
         return transfer;
     }

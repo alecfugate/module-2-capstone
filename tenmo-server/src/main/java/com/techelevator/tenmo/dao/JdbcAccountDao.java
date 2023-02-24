@@ -18,11 +18,24 @@ public class JdbcAccountDao implements AccountDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+//    @Override
+//    public BigDecimal getBalance(long userId) {
+//        String sqlFindBalanceById= "SELECT balance FROM account WHERE user_id = ?";
+//        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlFindBalanceById,userId);
+//        BigDecimal balance = new BigDecimal(0.00);
+//        while (results.next()){
+//            balance = results.getBigDecimal("balance");
+//        }
+//
+//        return balance;
+//    }
+
     @Override
     public BigDecimal getBalance(long userId) {
         String sql = "SELECT balance FROM account WHERE user_id = ?";
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
     }
+
 
     @Override
     public void updateBalance(long userId, BigDecimal amount) {
@@ -56,12 +69,12 @@ public class JdbcAccountDao implements AccountDao {
     @Transactional
     public void checkAndUpdateBalance(BigDecimal amount, int accountIdFrom, int accountIdTo) throws  InsufficientFundsException{
         checkBalance(amount, accountIdFrom);
-        String sql = "UPDATE accounts " +
+        String sql = "UPDATE account " +
                 "SET balance = balance - ? " + // new updated sender balance
                 "WHERE account_id = ?; ";
         jdbcTemplate.update(sql, amount, accountIdFrom);
 
-        sql = "UPDATE accounts " +
+        sql = "UPDATE account " +
                 "SET balance = balance + ? " + // new updated sender balance
                 "WHERE account_id = ?; ";
         jdbcTemplate.update(sql, amount, accountIdTo);
@@ -69,7 +82,7 @@ public class JdbcAccountDao implements AccountDao {
 
     private void checkBalance(BigDecimal amount, int accountIdFrom) throws InsufficientFundsException {
         String sql = "SELECT (balance >= ?) as is_valid " +
-                "FROM accounts " +
+                "FROM account " +
                 "WHERE account_id = ?;";
         SqlRowSet isValid = jdbcTemplate.queryForRowSet(sql, amount , accountIdFrom);
         if (isValid.next()) {
