@@ -51,17 +51,33 @@ public class TransferService {
         return message;
     }
 
-    private HttpEntity makeEntity(AuthenticatedUser authenticatedUser) {
+    public String updateTransfer(AuthenticatedUser authenticatedUser, Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(authenticatedUser.getToken());
-        HttpEntity entity = new HttpEntity(headers);
-        return entity;
+        HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
+
+        String url = baseUrl + "/transfers/" + transfer.getTransferId();
+        String message = "Your transaction is complete";
+
+        try {
+            restTemplate.exchange(url, HttpMethod.PUT, entity, Transfer.class);
+        } catch(RestClientResponseException e) {
+            if (e.getMessage().contains("Insufficient Funds")) {
+                message = "You don't have enough money for that transaction.";
+            } else {
+                message = "Could not complete request. Code: " + e.getRawStatusCode();
+            }
+        } catch(ResourceAccessException e) {
+            message = "Server network issue, please try again.";
+        }
+        return message;
     }
 
-    public Transfer[] getTransfersFromUserId(AuthenticatedUser authenticatedUser, int userId) {
+    public Transfer[] getTransfersFromUserId(AuthenticatedUser authenticatedUser) {
         Transfer[] transfers = null;
         try {
-            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + userId,
+            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + authenticatedUser.getUser().getId(),
                     HttpMethod.GET,
                     makeEntity(authenticatedUser),
                     Transfer[].class
@@ -75,5 +91,28 @@ public class TransferService {
     }
 
 
+
+    public Transfer[] getPendingTransfersByUserId(AuthenticatedUser authenticatedUser) {
+        Transfer[] transfers = null;
+        try {
+            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + authenticatedUser.getUser().getId() + "/pending",
+                    HttpMethod.GET,
+                    makeEntity(authenticatedUser),
+                    Transfer[].class
+            ).getBody();
+        } catch(RestClientResponseException e) {
+            System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
+        } catch(ResourceAccessException e) {
+            System.out.println("Server network issue. Please try again.");
+        }
+        return transfers;
+    }
+
+    private HttpEntity makeEntity(AuthenticatedUser authenticatedUser) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authenticatedUser.getToken());
+        HttpEntity entity = new HttpEntity(headers);
+        return entity;
+    }
 
 }

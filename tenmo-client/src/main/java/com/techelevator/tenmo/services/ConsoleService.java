@@ -140,4 +140,38 @@ public class ConsoleService {
         System.out.println("-------------------------------");
     }
 
+    public void printTransferDetails(int id, String fromUsername, String toUsername, String transferTypeDesc, String transferStatusDesc, BigDecimal amount) {
+        System.out.println("--------------------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("--------------------------------------------");
+        System.out.println("Id: " + id);
+        System.out.println("From: " + fromUsername);
+        System.out.println("To: " + toUsername);
+        System.out.println("Type: " + (transferTypeDesc != null ? transferTypeDesc : "Unknown"));
+        System.out.println("Status: " + transferStatusDesc);
+        System.out.println("Amount: $" + amount);
+        System.out.println("--------------------------------------------");
+    }
+
+//    public void printTransferDetails(int id, String fromUsername, String toUsername, boolean isApproved, String transferStatusDesc, BigDecimal amount) {
+//        String transferTypeDesc = isApproved ? "Approved" : "Denied";
+//        System.out.println("--------------------------------------------");
+//        System.out.println("Transfer Details");
+//        System.out.println("--------------------------------------------");
+//        System.out.println("Id: " + id);
+//        System.out.println("From: " + fromUsername);
+//        System.out.println("To: " + toUsername);
+//        System.out.println("Type: " + transferTypeDesc);
+//        System.out.println("Status: " + transferStatusDesc);
+//        System.out.println("Amount: $" + amount);
+//        System.out.println("--------------------------------------------");
+//    }
+
+
+    public void printApproveOrRejectOptions() {
+        System.out.println("1: Approve");
+        System.out.println("2: Reject");
+        System.out.println("0: Don't approve or reject\n");
+    }
+
 }

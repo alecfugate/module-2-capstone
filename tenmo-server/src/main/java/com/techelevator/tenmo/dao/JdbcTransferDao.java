@@ -23,21 +23,59 @@ public class JdbcTransferDao implements TransferDao {
 
 
     @Override
-    public List<Transfer> getAllTransfersForUser(Integer userId) {
-        List<Transfer> listOfTransfers = new ArrayList<>();
+    public List<Transfer> getAllTransfers() {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "SELECT * FROM transfer";
 
-        String sqlGetTransfers = "select * from tenmo_user as tu " +
-                "JOIN account ON tu.user_id = account.user_id " +
-                "JOIN transfers as tran ON accounts.account_id = tran.account_from OR accounts.account_id = tran.account_to " +
-                "WHERE account.account_id = ?";
-
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetTransfers, convertedAccountID(userId));
-        while (results.next()) {
-            Transfer transferHistory = mapRowToTransfer(results);
-            listOfTransfers.add(transferHistory);
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql);
+        while (rowSet.next()) {
+            transfers.add(mapRowToTransfer(rowSet));
         }
-        return listOfTransfers;
+        return transfers;
+    }
 
+    @Override
+    public List<Transfer> getAllTransfersForUser(int userId) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, t.amount, " +
+                "u_from.username AS from_username, u_to.username AS to_username " +
+                "FROM transfer t " +
+                "JOIN account a_from ON t.account_from = a_from.account_id " +
+                "JOIN account a_to ON t.account_to = a_to.account_id " +
+                "JOIN tenmo_user u_from ON a_from.user_id = u_from.user_id " +
+                "JOIN tenmo_user u_to ON a_to.user_id = u_to.user_id " +
+                "WHERE a_from.user_id = ? OR a_to.user_id = ? " +
+                "ORDER BY t.transfer_id ASC";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId, userId);
+        while (results.next()) {
+            Transfer transfer = mapRowToTransfer(results);
+            transfers.add(transfer);
+        }
+        return transfers;
+    }
+
+    @Override
+    public List<Transfer> getPendingTransfersByUserId(int userId) {
+        String sql = "SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, " +
+                "t.amount, tu_from.username AS from_username, tu_to.username AS to_username " +
+                "FROM transfer t " +
+                "JOIN account a_from ON t.account_from = a_from.account_id " +
+                "JOIN account a_to ON t.account_to = a_to.account_id " +
+                "JOIN tenmo_user tu_from ON a_from.user_id = tu_from.user_id " +
+                "JOIN tenmo_user tu_to ON a_to.user_id = tu_to.user_id " +
+                "WHERE t.transfer_status_id = 1 AND t.account_from IN " +
+                "(SELECT account_id FROM account WHERE user_id = ?) " +
+                "ORDER BY t.transfer_id ASC";
+
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+
+        List<Transfer> transfers = new ArrayList<>();
+        while (results.next()) {
+            Transfer transfer = mapRowToTransfer(results);
+            transfers.add(transfer);
+        }
+
+        return transfers;
     }
 
     @Override
@@ -79,16 +117,6 @@ public class JdbcTransferDao implements TransferDao {
         jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getTransferId());
     }
 
-    public int convertedAccountID(int userId) {
-        int accountIdConverted = 0;
-        String sqlConvertUserIdToAccountId = "SELECT account_id FROM account WHERE user_id = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlConvertUserIdToAccountId, userId);
-        while (results.next()) {
-            accountIdConverted = results.getInt("account_id");
-        }
-        return accountIdConverted;
-    }
-
     private Transfer mapRowToTransfer(SqlRowSet rowSet) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(rowSet.getInt("transfer_id"));
@@ -97,6 +125,8 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setAccountFrom(rowSet.getInt("account_from"));
         transfer.setAccountTo(rowSet.getInt("account_to"));
         transfer.setAmount(rowSet.getBigDecimal("amount"));
+        transfer.setUserTo(rowSet.getString("to_username"));
+        transfer.setUserFrom(rowSet.getString("from_username"));
         return transfer;
     }
 

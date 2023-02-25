@@ -14,6 +14,25 @@ public class Transfer {
     private String userFrom;
     private String userTo;
 
+    private String transferTypeDesc;
+    private String transferStatusDesc;
+
+    public String getTransferTypeDesc() {
+        return transferTypeDesc;
+    }
+
+    public void setTransferTypeDesc(String transferTypeDesc) {
+        this.transferTypeDesc = transferTypeDesc;
+    }
+
+    public String getTransferStatusDesc() {
+        return transferStatusDesc;
+    }
+
+    public void setTransferStatusDesc(String transferStatusDesc) {
+        this.transferStatusDesc = transferStatusDesc;
+    }
+
     public Transfer(){}
     public Transfer(int transferId, int transferTypeId, int statusId, int accountFrom, int accountTo, BigDecimal amount){
         if(transferId != (Integer) null) {
