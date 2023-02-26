@@ -2,17 +2,12 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.exceptions.InsufficientFundsException;
 import com.techelevator.tenmo.model.Account;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 
 public class JdbcAccountDaoTests extends BaseDaoTests{
 
@@ -55,14 +50,18 @@ public class JdbcAccountDaoTests extends BaseDaoTests{
         Assert.assertEquals(ACCOUNT_1, test);
     }
 
-    @Test(expected = InsufficientFundsException.class)
+    @Test//(expected = InsufficientFundsException.class)
     public void checkAndUpdateBalance_given_negative_value_throws_InsufficientFundsException() {
         try {
-            sut.checkAndUpdateBalance(new BigDecimal("3000.00"), 1, 2);
+            // Changed the input value as a negative number to test
+            sut.checkAndUpdateBalance(new BigDecimal("-3000.00"), 1, 2);
+            //If the expected exception happens, it will skip to the catch
+            //otherwise big L
+            Assert.fail("Negative number shouldn't be allowed");
         } catch (InsufficientFundsException e) {
-            Assert.assertTrue(true);
+            //Assert.assertTrue(true);
         }
-        Assert.fail();
+        //Assert.fail();
     }
 
     @Test

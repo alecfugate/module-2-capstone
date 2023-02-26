@@ -68,6 +68,7 @@ public class JdbcAccountDao implements AccountDao {
     @Override
     @Transactional
     public void checkAndUpdateBalance(BigDecimal amount, int accountIdFrom, int accountIdTo) throws  InsufficientFundsException{
+        checkAmount(amount);
         checkBalance(amount, accountIdFrom);
         String sql = "UPDATE account " +
                 "SET balance = balance - ? " + // new updated sender balance
@@ -91,6 +92,20 @@ public class JdbcAccountDao implements AccountDao {
         }
 
     }
+
+    //
+    // New stuff
+    //
+    public void checkAmount(BigDecimal amount) throws InsufficientFundsException{
+        //Checks the signum of the given amount, if it's negative it will throw an exception
+        // signum will check the inverse state of number so +/0/- or literally 1/0/-1
+        if(amount.signum() == -1){
+            throw new InsufficientFundsException();
+        }
+    }
+    //
+    //
+    //
 
     private Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
