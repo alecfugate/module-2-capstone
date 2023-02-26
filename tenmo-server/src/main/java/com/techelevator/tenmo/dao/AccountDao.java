@@ -4,15 +4,18 @@ import com.techelevator.tenmo.exceptions.InsufficientFundsException;
 import com.techelevator.tenmo.model.Account;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface AccountDao {
-    BigDecimal getBalance(long userId);
+    BigDecimal getBalanceByAccountID(long accountId);
+
+    List<BigDecimal> getBalance(long userID);
 
     void updateBalance(long userId, BigDecimal amount);
 
     Account getAccountByAccountID(long accountId);
 
-    Account getAccountByUserID(long userId);
+    List<Account> getAccountsByUserID(long userId);
 
     void checkAndUpdateBalance(BigDecimal amount, int accountIdFrom, int accountIdTo) throws InsufficientFundsException;
 

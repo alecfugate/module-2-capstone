@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.techelevator.tenmo.exceptions.InsufficientFundsException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class JdbcAccountDao implements AccountDao {
@@ -31,9 +34,31 @@ public class JdbcAccountDao implements AccountDao {
 //    }
 
     @Override
-    public BigDecimal getBalance(long userId) {
-        String sql = "SELECT balance FROM account WHERE user_id = ?";
-        return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
+    public BigDecimal getBalanceByAccountID(long accountId) {
+        try {
+            String sql = "SELECT balance FROM account WHERE account_id = ?";
+            return jdbcTemplate.queryForObject(sql, BigDecimal.class, accountId);
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
+    }
+
+    @Override
+    public List<BigDecimal> getBalance(long userID) {
+        List<BigDecimal> decimalList = new ArrayList<>();
+
+        try {
+            String sql = "SELECT balance FROM account WHERE user_id = ?";
+            SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userID);
+            while (result.next()) {
+                BigDecimal decimal = result.getBigDecimal("balance");
+                decimalList.add(decimal);
+            }
+
+            return decimalList;
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
 
@@ -55,14 +80,15 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public Account getAccountByUserID(long userId) {
+    public List<Account> getAccountsByUserID(long userId) {
+        List<Account> accountList = new ArrayList<>();
+
         String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
-        if (results.next()) {
-            return mapRowToAccount(results);
-        } else {
-            return null;
+        while (results.next()) {
+            accountList.add(mapRowToAccount(results));
         }
+        return accountList;
     }
 
     @Override
