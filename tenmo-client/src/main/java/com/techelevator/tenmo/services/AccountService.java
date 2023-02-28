@@ -18,7 +18,6 @@ public class AccountService {
 
     private final String baseUrl;
     private RestTemplate restTemplate;
-    private BasicLogger logger = new BasicLogger();
 
     public AccountService(String baseURL) {
         this.restTemplate = new RestTemplate();
@@ -28,7 +27,7 @@ public class AccountService {
 
     //TODO: Running into an issue where the restTemplate is returning 0 for AccountID and UserID
     public Account[] getBalance(AuthenticatedUser authenticatedUser) {
-        HttpEntity entity = createHttpEntity(authenticatedUser);
+        HttpEntity<Void> entity = createHttpEntity(authenticatedUser);
         Account[] balance = null;
 
         try {
@@ -37,15 +36,16 @@ public class AccountService {
                     entity,
                     Account[].class
             ).getBody();
-        } catch(RestClientResponseException e) {
+        } catch (RestClientResponseException e) {
             System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
-        } catch(ResourceAccessException e) {
+        } catch (ResourceAccessException e) {
             System.out.println("Server network issue. Please try again.");
         }
-        for(Account account: balance) {
-            logger.log("[DEBUG]\t------\tAccount Info Retrieved: " + account.toString());
+        if (balance != null) {
+            for (Account account : balance) {
+                BasicLogger.log("[DEBUG]\t------\tAccount Info Retrieved: " + account.toString());
+            }
         }
-
         return balance;
     }
 
@@ -66,11 +66,10 @@ public class AccountService {
         return account;
     }
 
-    private HttpEntity createHttpEntity(AuthenticatedUser authenticatedUser) {
+    private HttpEntity<Void> createHttpEntity(AuthenticatedUser authenticatedUser) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(authenticatedUser.getToken());
-        HttpEntity entity = new HttpEntity(httpHeaders);
-        return entity;
+        return new HttpEntity<>(httpHeaders);
     }
 
 }

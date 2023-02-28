@@ -307,8 +307,7 @@ public class App {
     }
 
     private boolean isMe(AuthenticatedUser currentUser, String userName) {
-        if(currentUser.getUser().getUsername().equals(userName)) return true;
-        else return false;
+        return currentUser.getUser().getUsername().equals(userName);
     }
 
     private Transfer validateTransferIdChoice(int transferIdChoice, Transfer[] transfers, AuthenticatedUser currentUser) {

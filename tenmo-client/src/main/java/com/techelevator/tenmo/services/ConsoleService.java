@@ -90,7 +90,6 @@ public class ConsoleService {
                 result = Double.parseDouble(userInput);
                 BigDecimal bd = BigDecimal.valueOf(result);
                 if (bd.scale() < 3 && bd.compareTo(BigDecimal.ZERO) > 0) {
-                    continue;
                 } else {
                     System.out.println("\n*** " + userInput + " has too many decimal places or is negative ***\n");
                     result = null;
