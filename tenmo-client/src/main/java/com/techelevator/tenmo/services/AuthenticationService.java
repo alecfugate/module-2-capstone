@@ -25,12 +25,14 @@ public class AuthenticationService {
     public AuthenticatedUser login(UserCredentials credentials) {
         HttpEntity<UserCredentials> entity = createCredentialsEntity(credentials);
         AuthenticatedUser user = null;
+
         try {
             ResponseEntity<AuthenticatedUser> response =
                     restTemplate.exchange(baseUrl + "login", HttpMethod.POST, entity, AuthenticatedUser.class);
             user = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
+            e.printStackTrace();
         }
         return user;
     }

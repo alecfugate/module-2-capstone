@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class Transfer {
@@ -9,7 +10,8 @@ public class Transfer {
     private int transferStatusId;
     private int accountFrom;
     private int accountTo;
-    private BigDecimal amount = new BigDecimal(0.00);
+    @Positive
+    private BigDecimal amount;
 
     private String userFrom;
     private String userTo;
@@ -107,5 +109,11 @@ public class Transfer {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String toString(){
+        return "Transfer ID: " + transferId + "\nTransfer Type: " + transferTypeId + " - " + transferTypeDesc +
+                "\n Transfer Status: " + transferStatusId + " - " + transferStatusDesc + "\nAccount ID From: " + accountFrom
+                + "\nAccount ID To: " + accountTo + "\nAmount to Transfer: " + amount.toString();
     }
 }

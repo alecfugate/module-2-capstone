@@ -9,14 +9,15 @@ import java.util.List;
 public interface AccountDao {
     BigDecimal getBalanceByAccountID(long accountId);
 
-    List<BigDecimal> getBalance(long userID);
+    Account[] getBalance(long userID);
 
     void updateBalance(long userId, BigDecimal amount);
 
     Account getAccountByAccountID(long accountId);
 
-    List<Account> getAccountsByUserID(long userId);
+    Account[] getAccountsByUserID(long userId);
 
-    void checkAndUpdateBalance(BigDecimal amount, int accountIdFrom, int accountIdTo) throws InsufficientFundsException;
+    void updateBalanceTransfer(BigDecimal amount, int accountIdFrom, int accountIdTo) throws InsufficientFundsException;
 
+    boolean checkBalance(BigDecimal amount, int accountIdFrom) throws InsufficientFundsException;
 }

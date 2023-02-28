@@ -28,9 +28,9 @@ public class TransferService {
         headers.setBearerAuth(authenticatedUser.getToken());
         HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
 
-        String url = baseUrl + "/transfers/" + transfer.getTransferId();
+        String url = baseUrl + "/transfers/" + transfer.getTransferID();
         String message = "";
-        if(transfer.getTransferTypeId()==2) {
+        if(transfer.getTransferType()==2) {
             message = "Your transfer is complete.";
         }
         else {
@@ -57,7 +57,7 @@ public class TransferService {
         headers.setBearerAuth(authenticatedUser.getToken());
         HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
 
-        String url = baseUrl + "/transfers/" + transfer.getTransferId();
+        String url = baseUrl + "/transfers/" + transfer.getTransferID();
         String message = "Your transaction is complete";
 
         try {

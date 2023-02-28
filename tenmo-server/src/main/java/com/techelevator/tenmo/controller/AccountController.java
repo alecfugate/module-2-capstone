@@ -4,19 +4,16 @@ import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/account/")
+@RequestMapping(path = "/account")
 public class AccountController {
-
 
     @Autowired
     private AccountDao accountDao;
@@ -24,14 +21,13 @@ public class AccountController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(path = "balance", method = RequestMethod.GET)
-    public List<BigDecimal> getBalance(Principal principal) {
+    @GetMapping(path = "/balance")
+    public Account[] getBalance(Principal principal) {
         return accountDao.getBalance(userDao.findIdByUsername(principal.getName()));
-
     }
 
-    @RequestMapping(path = "user/{id}", method= RequestMethod.GET)
-    public List<Account> getAccountByUserId(@PathVariable int id) {
+    @GetMapping(path = "/user/{id}")
+    public Account[] getAccountByUserId(@PathVariable int id) {
         return accountDao.getAccountsByUserID(id);
     }
 

@@ -3,16 +3,12 @@ package com.techelevator.tenmo;
 import com.techelevator.tenmo.exceptions.InvalidTransferIdChoiceException;
 import com.techelevator.tenmo.exceptions.InvalidUserChoiceException;
 import com.techelevator.tenmo.exceptions.UserNotFoundException;
-import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.model.*;
 import com.techelevator.tenmo.services.*;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
+import com.techelevator.util.BasicLogger;
 
 
 import java.math.BigDecimal;
-
-
 
 public class App {
 
@@ -28,6 +24,7 @@ public class App {
     private TransferService transferService = new TransferService(API_BASE_URL);
 
     private UserService userService = new UserService(API_BASE_URL);
+    private BasicLogger logger = new BasicLogger();
 
 
 
@@ -103,16 +100,20 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
-        BigDecimal balance = accountService.getBalance(currentUser);
-        System.out.println("Your current account balance is: $" + balance);
+        Account[] balance = accountService.getBalance(currentUser);
+        BigDecimal total = new BigDecimal(0);
+        for(Account account: balance) {
+            System.out.println("Account Number: " + account.getAccountID() + "\t\tBalance: $" + account.getBalance());
+        }
+        System.out.println("\n\nTotal Balance: " + total);
     }
 
 
 
     private void viewTransferHistory() {
         Transfer[] transfers = transferService.getTransfersFromUserId(currentUser);
-        if(transfers ==null) {
-            consoleService.getUserInput("\nYou don't have any transfers, press Enter to continue");
+        if(transfers.length == 0) {
+            System.out.print("\nYou don't have any transfers");
             return;
         }
 
@@ -130,7 +131,7 @@ public class App {
             Transfer transferChoice = validateTransferIdChoice(transferIdChoice, transfers, currentUser);
             if (transferChoice != null) {
                     consoleService.printTransferDetails(
-                            transferChoice.getTransferId(),
+                            transferChoice.getTransferID(),
                             transferChoice.getUserFrom(),
                             transferChoice.getUserTo(),
                             transferChoice.getTransferTypeDesc(),
@@ -144,8 +145,8 @@ public class App {
 
     private void viewPendingRequests() {
         Transfer[] transfers = transferService.getPendingTransfersByUserId(currentUser);
-        if (transfers == null) {
-            consoleService.getUserInput("\nYou don't have any pending requests, press Enter to continue");
+        if (transfers.length == 0) {
+            System.out.print("\nYou don't have any pending requests.");
             return;
         }
 
@@ -164,7 +165,7 @@ public class App {
                 fromOrTo = "To: " + transfer.getUserTo();
                 toUsername = "Me";
             }
-            System.out.printf("%-11d%-21s%-10s\n", transfer.getTransferId(), toUsername, amount);
+            System.out.printf("%-11d%-21s%-10s\n", transfer.getTransferID(), toUsername, amount);
         }
         System.out.println("-------------------------------------------");
 
@@ -213,7 +214,7 @@ public class App {
             username = transfer.getUserFrom();
         }
         String amount = String.format("$%.2f", transfer.getAmount());
-        System.out.printf("%-10d%-24s%-10s\n", transfer.getTransferId(), fromOrTo + username, amount);
+        System.out.printf("%-10d%-24s%-10s\n", transfer.getTransferID(), fromOrTo + username, amount);
     }
 
 
@@ -248,7 +249,7 @@ public class App {
                 }
                 return true;
             } catch (UserNotFoundException | InvalidUserChoiceException e) {
-                consoleService.getUserInput(e.getMessage()+", Press Enter to continue");
+                System.out.print(e.getMessage());
             }
         }
         return false;
@@ -257,32 +258,37 @@ public class App {
 
     private Transfer createTransfer (int accountChoiceUserId, BigDecimal amount, int transferTypeId, int transferStatusId){
         // method to handle sendbucks and request bucks
-        Account accountToId;
-        Account accountFromId;
+        Account[] accountsTo;
+        Account[] accountsFrom;
+        int accountFromID;
+        int accountToID;
         // get Account ID from current user and current choice user
         if(transferTypeId==2) {
-            accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
-            accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
+            accountsTo = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
+            accountsFrom = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
         } else {
-            accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
-            accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
+            accountsTo = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
+            accountsFrom = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
         }
 
+        viewCurrentBalance();
+        accountFromID = consoleService.promptForInt("Please select an account to send from: ");
+
         Transfer transfer = new Transfer();
-        transfer.setAccountFrom(accountFromId.getAccount_id());
-        transfer.setAccountTo(accountToId.getAccount_id());
+        transfer.setAccountFrom(accountFromID);
+        transfer.setAccountTo(accountsTo[0].getAccountID());
         transfer.setAmount(amount);
-        transfer.setTransferStatusId(transferStatusId);
-        transfer.setTransferTypeId(transferTypeId);
+        transfer.setTransferStatus(transferStatusId);
+        transfer.setTransferType(transferTypeId);
 
         String message = transferService.createTransfer(currentUser, transfer);
-        consoleService.getUserInput(message+" Press Enter to continue");
+        System.out.print(message);
         return transfer;
     }
 
 
     private void printTransferDetails(AuthenticatedUser currentUser, Transfer transferChoice) {
-        int id = transferChoice.getTransferId();
+        int id = transferChoice.getTransferID();
         BigDecimal amount = transferChoice.getAmount();
 
         String fromUserName = transferChoice.getUserFrom();
@@ -311,7 +317,7 @@ public class App {
             try {
                 boolean validTransferIdChoice = false;
                 for (Transfer transfer : transfers) {
-                    if (transfer.getTransferId() == transferIdChoice) {
+                    if (transfer.getTransferID() == transferIdChoice) {
                         validTransferIdChoice = true;
                         transferChoice = transfer;
                         break;
@@ -321,7 +327,7 @@ public class App {
                     throw new InvalidTransferIdChoiceException();
                 }
             } catch (InvalidTransferIdChoiceException e) {
-                consoleService.getUserInput(e.getMessage()+", Press Enter to continue");
+                System.out.print(e.getMessage());
             }
         }
         return transferChoice;
@@ -334,17 +340,15 @@ public class App {
 
         if(choice != 0) {
             if(choice == 1) {
-                pendingTransfer.setTransferStatusId(2);
+                pendingTransfer.setTransferStatus(2);
             } else if (choice == 2) {
-                pendingTransfer.setTransferStatusId(3);
+                pendingTransfer.setTransferStatus(3);
             } else {
-                consoleService.getUserInput("Invalid choice, Press Enter to continue"); return;
+                System.out.print("Invalid choice"); return;
             }
             String message = transferService.updateTransfer(currentUser, pendingTransfer);
-            consoleService.getUserInput(message+" Press Enter to continue");
+            System.out.print(message);
         }
 
     }
-
-
 }

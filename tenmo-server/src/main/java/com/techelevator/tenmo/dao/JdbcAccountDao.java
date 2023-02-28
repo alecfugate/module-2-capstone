@@ -1,6 +1,8 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -16,6 +18,7 @@ import java.util.List;
 public class JdbcAccountDao implements AccountDao {
 
     private JdbcTemplate jdbcTemplate;
+    Logger logger = LoggerFactory.getLogger(JdbcAccountDao.class);
 
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -44,18 +47,26 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public List<BigDecimal> getBalance(long userID) {
-        List<BigDecimal> decimalList = new ArrayList<>();
+    public Account[] getBalance(long userID) {
+        List<Account> decimalList = new ArrayList<>();
 
         try {
-            String sql = "SELECT balance FROM account WHERE user_id = ?";
+            String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id = ?";
             SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userID);
             while (result.next()) {
-                BigDecimal decimal = result.getBigDecimal("balance");
-                decimalList.add(decimal);
+                Account account = mapRowToAccount(result);
+                decimalList.add(account);
+            }
+            Account[] accounts = new Account[decimalList.size()];
+            decimalList.toArray(accounts);
+
+            if(accounts.length > 0) {
+                logger.info("getBalance called by: " + userID);
+                logger.info("returned account array of size: " + accounts.length);
+                logger.info("account at element[0]: " + accounts[0].toString());
             }
 
-            return decimalList;
+            return accounts;
         } catch (EmptyResultDataAccessException e){
             return null;
         }
@@ -80,22 +91,23 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public List<Account> getAccountsByUserID(long userId) {
+    public Account[] getAccountsByUserID(long userId) {
         List<Account> accountList = new ArrayList<>();
+
 
         String sql = "SELECT account_id, user_id, balance FROM account WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         while (results.next()) {
             accountList.add(mapRowToAccount(results));
         }
-        return accountList;
+        Account[] accountArray = new Account[accountList.size()];
+        accountList.toArray(accountArray);
+        return accountArray;
     }
 
     @Override
     @Transactional
-    public void checkAndUpdateBalance(BigDecimal amount, int accountIdFrom, int accountIdTo) throws  InsufficientFundsException{
-        checkAmount(amount);
-        checkBalance(amount, accountIdFrom);
+    public void updateBalanceTransfer(BigDecimal amount, int accountIdFrom, int accountIdTo) throws  InsufficientFundsException{
         String sql = "UPDATE account " +
                 "SET balance = balance - ? " + // new updated sender balance
                 "WHERE account_id = ?; ";
@@ -107,35 +119,36 @@ public class JdbcAccountDao implements AccountDao {
         jdbcTemplate.update(sql, amount, accountIdTo);
     }
 
-    private void checkBalance(BigDecimal amount, int accountIdFrom) throws InsufficientFundsException {
+    public boolean checkBalance(BigDecimal amount, int accountIdFrom) throws InsufficientFundsException {
         String sql = "SELECT (balance >= ?) as is_valid " +
                 "FROM account " +
                 "WHERE account_id = ?;";
-        SqlRowSet isValid = jdbcTemplate.queryForRowSet(sql, amount , accountIdFrom);
-        if (isValid.next()) {
-            if (!isValid.getBoolean("is_valid"))
+        boolean isValid = jdbcTemplate.queryForObject(sql, boolean.class, amount, accountIdFrom);
+            if (isValid)
+                return true;
+            else {
                 throw new InsufficientFundsException();
-        }
-
+            }
     }
 
     //
     // New stuff
     //
-    public void checkAmount(BigDecimal amount) throws InsufficientFundsException{
+    /* May not be necessary using variable constraints on Transfer.class */
+    public boolean checkAmount(BigDecimal amount) throws InsufficientFundsException{
         //Checks the signum of the given amount, if it's negative it will throw an exception
         // signum will check the inverse state of number so +/0/- or literally 1/0/-1
-        if(amount.signum() == -1){
+        if(amount.signum() == -1 || amount.signum() == 0){
             throw new InsufficientFundsException();
+        } else {
+            return true;
         }
     }
-    //
-    //
-    //
+
 
     private Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
-        account.setAccount_id(rs.getInt("account_id"));
+        account.setAccountId(rs.getInt("account_id"));
         account.setUser_id(rs.getInt("user_id"));
         account.setBalance(rs.getBigDecimal("balance"));
         return account;
