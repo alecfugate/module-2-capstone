@@ -21,7 +21,7 @@ public class AccountController {
     @Autowired
     private UserDao userDao;
 
-    @GetMapping(path = "/balance")
+    @GetMapping(path = "/accounts")
     public Account[] getBalance(Principal principal) {
         return accountDao.getBalance(userDao.findIdByUsername(principal.getName()));
     }

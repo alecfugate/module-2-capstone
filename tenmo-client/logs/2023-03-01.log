@@ -34,3 +34,63 @@ Transfer Type: 2 - null
 Account ID From: 2003
 Account ID To: 0
 Amount to Transfer: 10
+2023-03-01T14:27:49.0669267 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T14:28:14.1883176 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 0	Balance: 1000.00
+2023-03-01T14:34:11.0084578 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 0	Balance: 1000.00
+2023-03-01T14:36:55.0821986 I/O error on POST request for "http://localhost:8080/login": Connection reset; nested exception is java.net.SocketException: Connection reset
+2023-03-01T14:37:13.3892294 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 0	Balance: 1000.00
+2023-03-01T14:38:36.3337567 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 0	Balance: 1000.00
+2023-03-01T14:40:47.1300667 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 0	Balance: 1000.00
+2023-03-01T14:46:01.4162364 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 0	Balance: 1000.00
+2023-03-01T14:47:15.3190082 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 1000.00
+2023-03-01T14:47:38.5390996 [DEBUG]	-App.sendBucks-	UserID to send bucks: 1001
+2023-03-01T14:47:40.3282919 [DEBUG]	 -App.createTransfer()- 	Account ID: 2001	User ID: 1001	Balance: 1000.00
+2023-03-01T14:47:40.3443024 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 1000.00
+2023-03-01T14:47:43.6856439 Transfer ID: 0
+Transfer Type: 2 - null
+Transfer Status: 2 - null
+Account ID From: 2003
+Account ID To: 2001
+Amount to Transfer: 10
+2023-03-01T14:49:28.2438095 [DEBUG]	-App.sendBucks-	UserID to send bucks: 1001
+2023-03-01T14:49:30.4839335 [DEBUG]	 -App.createTransfer()- 	Account ID: 2001	User ID: 1001	Balance: 1000.00
+2023-03-01T14:49:30.5119546 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 1000.00
+2023-03-01T14:49:33.4258514 Transfer ID: 0
+Transfer Type: 2 - null
+Transfer Status: 2 - null
+Account ID From: 2003
+Account ID To: 2001
+Amount to Transfer: 10
+2023-03-01T14:49:36.3284245 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 990.00
+2023-03-01T14:57:49.4442197 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 990.00
+2023-03-01T14:57:57.193878 Transfer ID: 0
+Transfer Type: 1 - null
+Transfer Status: 1 - null
+Account ID From: 2003
+Account ID To: 2003
+Amount to Transfer: 10
+2023-03-01T15:01:42.6387344 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 990.00
+2023-03-01T15:01:46.9973886 Transfer ID: 0
+Transfer Type: 1 - null
+Transfer Status: 1 - null
+Account ID From: 2001
+Account ID To: 2003
+Amount to Transfer: 10
+2023-03-01T15:02:01.2387048 401 : [no body]
+2023-03-01T15:02:24.257209 401 : [no body]
+2023-03-01T15:04:36.7841866 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2004	User ID: 1004	Balance: 1000.00
+2023-03-01T15:04:41.6779403 Transfer ID: 0
+Transfer Type: 1 - null
+Transfer Status: 1 - null
+Account ID From: 2003
+Account ID To: 2004
+Amount to Transfer: 10
+2023-03-01T15:10:18.2968797 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 980.00
+2023-03-01T15:10:38.7025637 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2003	User ID: 1003	Balance: 980.00
+2023-03-01T15:10:40.9320287 Transfer ID: 0
+Transfer Type: 1 - null
+Transfer Status: 1 - null
+Account ID From: 2004
+Account ID To: 2003
+Amount to Transfer: 20
+2023-03-01T15:11:54.2756396 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2004	User ID: 1004	Balance: 990.00

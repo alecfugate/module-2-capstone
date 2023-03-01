@@ -103,7 +103,7 @@ public class App {
         Account[] balances = accountService.getBalance(currentUser);
         BigDecimal total = new BigDecimal(0);
         for(Account account: balances) {
-            System.out.println("Account Number: " + account.getAccountID() + "\t\tBalance: $" + account.getBalance());
+            System.out.println("Account Number: " + account.getAccountId() + "\t\tBalance: $" + account.getBalance());
         }
         System.out.println("\n\nTotal Balance: " + total);
     }
@@ -131,7 +131,7 @@ public class App {
             Transfer transferChoice = validateTransferIdChoice(transferIdChoice, transfers, currentUser);
             if (transferChoice != null) {
                     consoleService.printTransferDetails(
-                            transferChoice.getTransferID(),
+                            transferChoice.getTransferId(),
                             transferChoice.getUserFrom(),
                             transferChoice.getUserTo(),
                             transferChoice.getTransferTypeDesc(),
@@ -165,7 +165,7 @@ public class App {
                 fromOrTo = "To: " + transfer.getUserTo();
                 toUsername = "Me";
             }
-            System.out.printf("%-11d%-21s%-10s\n", transfer.getTransferID(), toUsername, amount);
+            System.out.printf("%-11d%-21s%-10s\n", transfer.getTransferId(), toUsername, amount);
         }
         System.out.println("-------------------------------------------");
 
@@ -215,7 +215,7 @@ public class App {
             username = transfer.getUserFrom();
         }
         String amount = String.format("$%.2f", transfer.getAmount());
-        System.out.printf("%-10d%-24s%-10s\n", transfer.getTransferID(), fromOrTo + username, amount);
+        System.out.printf("%-10d%-24s%-10s\n", transfer.getTransferId(), fromOrTo + username, amount);
     }
 
 
@@ -261,21 +261,26 @@ public class App {
         // method to handle sendbucks and request bucks
         Account[] accountsTo;
         Account[] accountsFrom;
-        int accountFromID;
-        int accountToID;
+        int accountFromID = 0;
+        int accountToID = 0;
         // get Account ID from current user and current choice user
         if(transferTypeId==2) {
             accountsTo = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
             BasicLogger.log("[DEBUG]\t -App.createTransfer()- \t" + accountsTo[0].toString());
             accountsFrom = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
+
+            viewCurrentBalance();
+            accountFromID = consoleService.promptForInt("Please select an account to send from: ");
+            accountToID = accountsTo[0].getAccountId();
+
         } else {
             accountsTo = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
             accountsFrom = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
-        }
 
-        viewCurrentBalance();
-        accountFromID = consoleService.promptForInt("Please select an account to send from: ");
-        accountToID = accountsTo[0].getAccountID();
+            accountFromID = accountsFrom[0].getAccountId();
+            viewCurrentBalance();
+            accountToID = consoleService.getUserInputInteger("Please select an account to receive money in: ");
+        }
 
         Transfer transfer = new Transfer();
         transfer.setAccountFrom(accountFromID);
@@ -291,7 +296,7 @@ public class App {
 
 
     private void printTransferDetails(AuthenticatedUser currentUser, Transfer transferChoice) {
-        int id = transferChoice.getTransferID();
+        int id = transferChoice.getTransferId();
         BigDecimal amount = transferChoice.getAmount();
 
         String fromUserName = transferChoice.getUserFrom();
@@ -319,7 +324,7 @@ public class App {
             try {
                 boolean validTransferIdChoice = false;
                 for (Transfer transfer : transfers) {
-                    if (transfer.getTransferID() == transferIdChoice) {
+                    if (transfer.getTransferId() == transferIdChoice) {
                         validTransferIdChoice = true;
                         transferChoice = transfer;
                         break;

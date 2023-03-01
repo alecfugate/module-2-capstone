@@ -9,9 +9,9 @@ public class Transfer {
 
     private int transferId;
     @NotBlank(message = "Transfer type must not be blank")
-    private int transferTypeId;
+    private int transferType;
     @NotBlank(message = "Transfer status must not be blank")
-    private int transferStatusId;
+    private int transferStatus  ;
     @NotBlank(message = "Account from must not be blank")
     @Min(message = "Account numbers begin at 2001", value = 2001)
     private int accountFrom;
@@ -44,12 +44,12 @@ public class Transfer {
     }
 
     public Transfer(){}
-    public Transfer(int transferId, int transferTypeId, int statusId, int accountFrom, int accountTo, BigDecimal amount){
+    public Transfer(int transferId, int transferType, int statusId, int accountFrom, int accountTo, BigDecimal amount){
         if(transferId != (Integer) null) {
             this.transferId = transferId;
         }
-        this.transferStatusId = statusId;
-        this.transferTypeId = transferTypeId;
+        this.transferStatus = statusId;
+        this.transferType = transferType;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
@@ -79,20 +79,20 @@ public class Transfer {
         this.transferId = transferId;
     }
 
-    public int getTransferTypeId() {
-        return transferTypeId;
+    public int getTransferType() {
+        return transferType;
     }
 
-    public void setTransferTypeId(int transferTypeId) {
-        this.transferTypeId = transferTypeId;
+    public void setTransferType(int transferType) {
+        this.transferType = transferType;
     }
 
-    public int getTransferStatusId() {
-        return transferStatusId;
+    public int getTransferStatus() {
+        return transferStatus;
     }
 
-    public void setTransferStatusId(int transferStatusId) {
-        this.transferStatusId = transferStatusId;
+    public void setTransferStatus(int transferStatus) {
+        this.transferStatus = transferStatus;
     }
 
     public int getAccountFrom() {
@@ -120,8 +120,8 @@ public class Transfer {
     }
 
     public String toString(){
-        return "Transfer ID: " + transferId + "\nTransfer Type: " + transferTypeId + " - " + transferTypeDesc +
-                "\nTransfer Status: " + transferStatusId + " - " + transferStatusDesc + "\nAccount ID From: " + accountFrom
+        return "Transfer ID: " + transferId + "\nTransfer Type: " + transferType + " - " + transferTypeDesc +
+                "\nTransfer Status: " + transferStatus + " - " + transferStatusDesc + "\nAccount ID From: " + accountFrom
                 + "\nAccount ID To: " + accountTo + "\nAmount to Transfer: " + amount.toString();
     }
 }

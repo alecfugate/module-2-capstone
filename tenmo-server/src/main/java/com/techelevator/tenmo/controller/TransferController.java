@@ -44,7 +44,7 @@ public class TransferController {
     @PostMapping(path = "/send_to/{id}")
     public void addTransfer(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFundsException {
 
-        if(transfer.getTransferStatusId()==2) {
+        if(transfer.getTransferStatus()==2) {
             // only update balance if it is approved
             // check balance from account and update BALANCE for both account
             if (accountDao.checkBalance(transfer.getAmount(), transfer.getAccountFrom())) {
@@ -63,7 +63,7 @@ public class TransferController {
     public void updateTransferStatus(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFundsException {
 
         // only update balance if it is approved
-        if(transfer.getTransferStatusId() == 2) {
+        if(transfer.getTransferStatus() == 2) {
 
             // check balance from account and update BALANCE for both account
             if (accountDao.checkBalance(transfer.getAmount(), transfer.getAccountFrom())) {

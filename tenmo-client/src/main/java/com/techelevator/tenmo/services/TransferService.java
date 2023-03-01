@@ -29,7 +29,7 @@ public class TransferService {
         headers.setBearerAuth(authenticatedUser.getToken());
         HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
 
-        String url = baseUrl + "/send_to/" + transfer.getTransferID();
+        String url = baseUrl + "/send_to/" + transfer.getTransferId();
         String message = "";
         if(transfer.getTransferType()==2) {
             message = "Your transfer is complete.";
@@ -59,7 +59,7 @@ public class TransferService {
         headers.setBearerAuth(authenticatedUser.getToken());
         HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
 
-        String url = baseUrl + "/update_status/" + transfer.getTransferID();
+        String url = baseUrl + "/update_status/" + transfer.getTransferId();
         String message = "Your transaction is complete";
 
         try {
@@ -79,7 +79,7 @@ public class TransferService {
     public Transfer[] getTransfersFromUserId(AuthenticatedUser authenticatedUser) {
         Transfer[] transfers = null;
         try {
-            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + authenticatedUser.getUser().getId(),
+            transfers = restTemplate.exchange(baseUrl + "/user/" + authenticatedUser.getUser().getId(),
                     HttpMethod.GET,
                     makeEntity(authenticatedUser),
                     Transfer[].class
@@ -97,7 +97,7 @@ public class TransferService {
     public Transfer[] getPendingTransfersByUserId(AuthenticatedUser authenticatedUser) {
         Transfer[] transfers = null;
         try {
-            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + authenticatedUser.getUser().getId() + "/pending",
+            transfers = restTemplate.exchange(baseUrl + "/user/" + authenticatedUser.getUser().getId() + "/pending",
                     HttpMethod.GET,
                     makeEntity(authenticatedUser),
                     Transfer[].class

@@ -28,10 +28,10 @@ public class AccountService {
     //TODO: Running into an issue where the restTemplate is returning 0 for AccountID and UserID
     public Account[] getBalance(AuthenticatedUser authenticatedUser) {
         HttpEntity<Void> entity = createHttpEntity(authenticatedUser);
-        Account[] balance = null;
+        Account[] accounts = null;
 
         try {
-            balance = restTemplate.exchange(baseUrl + "/balance",
+            accounts = restTemplate.exchange(baseUrl + "/accounts",
                     HttpMethod.GET,
                     entity,
                     Account[].class
@@ -41,19 +41,19 @@ public class AccountService {
         } catch (ResourceAccessException e) {
             System.out.println("Server network issue. Please try again.");
         }
-        if (balance != null) {
-            for (Account account : balance) {
+        if (accounts != null) {
+            for (Account account : accounts) {
                 BasicLogger.log("[DEBUG]\t-AccountService.getBalance()-\tAccount Info Retrieved: " + account.toString());
             }
         }
-        return balance;
+        return accounts;
     }
 
     public Account[] getAccountByUserId(AuthenticatedUser authenticatedUser, int userId) {
 
-        Account[] account = null;
+        Account[] accounts = null;
         try {
-            account = restTemplate.exchange(baseUrl + "/user/" + userId,
+            accounts = restTemplate.exchange(baseUrl + "/user/" + userId,
                     HttpMethod.GET,
                     createHttpEntity(authenticatedUser),
                     Account[].class).getBody();
@@ -63,7 +63,7 @@ public class AccountService {
             System.out.println("Server network issue. Please try again.");
         }
 
-        return account;
+        return accounts;
     }
 
     private HttpEntity<Void> createHttpEntity(AuthenticatedUser authenticatedUser) {
