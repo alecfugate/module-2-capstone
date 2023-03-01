@@ -105,4 +105,10 @@ public class Transfer {
     public void setTransferStatusDesc(String transferStatusDesc) {
         this.transferStatusDesc = transferStatusDesc;
     }
+
+    public String toString(){
+        return "Transfer ID: " + transferID + "\nTransfer Type: " + transferType + " - " + transferTypeDesc +
+                "\nTransfer Status: " + transferStatus + " - " + transferStatusDesc + "\nAccount ID From: " + accountFrom
+                + "\nAccount ID To: " + accountTo + "\nAmount to Transfer: " + amount.toString();
+    }
 }

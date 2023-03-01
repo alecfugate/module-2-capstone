@@ -1,0 +1,36 @@
+2023-03-01T10:26:22.719696 [DEBUG]	------	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T10:26:38.8389869 [DEBUG]	------	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T11:19:06.3105641 [DEBUG]	 ----- 	[Lcom.techelevator.tenmo.model.Account;@3febb011
+2023-03-01T11:19:06.329588 [DEBUG]	------	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T11:20:46.1370505 [DEBUG]	 ----- 	Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T11:20:46.1550633 [DEBUG]	------	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T11:21:28.5488784 [DEBUG]	 ----- 	Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T11:21:43.3913864 [DEBUG]	------	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T11:26:01.0481802 [DEBUG]	 ----- 	Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T11:26:01.0641912 [DEBUG]	------	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T12:17:19.0969843 [DEBUG]	 -App.createTransfer()- 	Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T12:17:19.1119824 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T12:17:21.0953467 Transfer ID: 0
+Transfer Type: 2 - null
+ Transfer Status: 2 - null
+Account ID From: 0
+Account ID To: 0
+Amount to Transfer: 10
+2023-03-01T12:20:51.0659885 [DEBUG]	-App.sendBucks-	UserID to send bucks: 1001
+2023-03-01T12:20:52.2996176 [DEBUG]	 -App.createTransfer()- 	Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T12:20:52.312627 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T12:20:58.2801794 Transfer ID: 0
+Transfer Type: 2 - null
+ Transfer Status: 2 - null
+Account ID From: 2003
+Account ID To: 1001
+Amount to Transfer: 10
+2023-03-01T12:22:36.560693 [DEBUG]	-App.sendBucks-	UserID to send bucks: 1001
+2023-03-01T12:22:37.7650863 [DEBUG]	 -App.createTransfer()- 	Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T12:22:37.777096 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 0	User ID: 0	Balance: 1000.00
+2023-03-01T12:22:40.9320475 Transfer ID: 0
+Transfer Type: 2 - null
+ Transfer Status: 2 - null
+Account ID From: 2003
+Account ID To: 0
+Amount to Transfer: 10

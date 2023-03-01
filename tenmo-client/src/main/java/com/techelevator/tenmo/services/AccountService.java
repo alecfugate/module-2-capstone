@@ -43,7 +43,7 @@ public class AccountService {
         }
         if (balance != null) {
             for (Account account : balance) {
-                BasicLogger.log("[DEBUG]\t------\tAccount Info Retrieved: " + account.toString());
+                BasicLogger.log("[DEBUG]\t-AccountService.getBalance()-\tAccount Info Retrieved: " + account.toString());
             }
         }
         return balance;
@@ -53,7 +53,7 @@ public class AccountService {
 
         Account[] account = null;
         try {
-            account = restTemplate.exchange(baseUrl + "account/user/" + userId,
+            account = restTemplate.exchange(baseUrl + "/user/" + userId,
                     HttpMethod.GET,
                     createHttpEntity(authenticatedUser),
                     Account[].class).getBody();

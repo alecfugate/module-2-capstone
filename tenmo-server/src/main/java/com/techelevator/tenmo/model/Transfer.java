@@ -1,14 +1,22 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class Transfer {
 
     private int transferId;
+    @NotBlank(message = "Transfer type must not be blank")
     private int transferTypeId;
+    @NotBlank(message = "Transfer status must not be blank")
     private int transferStatusId;
+    @NotBlank(message = "Account from must not be blank")
+    @Min(message = "Account numbers begin at 2001", value = 2001)
     private int accountFrom;
+    @NotBlank(message = "Account to must not be blank")
+    @Min(message = "Account numbers begin at 2001", value = 2001)
     private int accountTo;
     @Positive
     private BigDecimal amount;
@@ -113,7 +121,7 @@ public class Transfer {
 
     public String toString(){
         return "Transfer ID: " + transferId + "\nTransfer Type: " + transferTypeId + " - " + transferTypeDesc +
-                "\n Transfer Status: " + transferStatusId + " - " + transferStatusDesc + "\nAccount ID From: " + accountFrom
+                "\nTransfer Status: " + transferStatusId + " - " + transferStatusDesc + "\nAccount ID From: " + accountFrom
                 + "\nAccount ID To: " + accountTo + "\nAmount to Transfer: " + amount.toString();
     }
 }

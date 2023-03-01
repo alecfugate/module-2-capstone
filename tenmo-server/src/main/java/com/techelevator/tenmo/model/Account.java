@@ -1,12 +1,15 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
+
 
 public class Account {
 
     private int accountId;
     @NotBlank(message = "Must have a user ID associated with the account")
+    @Min(message = "User IDs begin at 1001", value = 1001)
     private int userID;
     @NotBlank(message = "Balance cannot be blank or empty")
     private BigDecimal balance;

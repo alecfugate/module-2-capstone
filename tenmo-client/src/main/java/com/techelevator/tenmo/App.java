@@ -100,9 +100,9 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
-        Account[] balance = accountService.getBalance(currentUser);
+        Account[] balances = accountService.getBalance(currentUser);
         BigDecimal total = new BigDecimal(0);
-        for(Account account: balance) {
+        for(Account account: balances) {
             System.out.println("Account Number: " + account.getAccountID() + "\t\tBalance: $" + account.getBalance());
         }
         System.out.println("\n\nTotal Balance: " + total);
@@ -184,6 +184,7 @@ public class App {
 
         int userIdChoice = consoleService.getUserInputInteger("Enter ID of user you are sending to (0 to cancel)");
         if (validateUserChoice(userIdChoice, users, currentUser)) {
+            BasicLogger.log("[DEBUG]\t-App.sendBucks-\tUserID to send bucks: " + userIdChoice);
             BigDecimal amountChoice = new BigDecimal(consoleService.getUserInputDouble("Enter amount"));
             createTransfer(userIdChoice, amountChoice, 2, 2);
 
@@ -265,6 +266,7 @@ public class App {
         // get Account ID from current user and current choice user
         if(transferTypeId==2) {
             accountsTo = accountService.getAccountByUserId(currentUser, accountChoiceUserId);
+            BasicLogger.log("[DEBUG]\t -App.createTransfer()- \t" + accountsTo[0].toString());
             accountsFrom = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
         } else {
             accountsTo = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId());
@@ -273,10 +275,11 @@ public class App {
 
         viewCurrentBalance();
         accountFromID = consoleService.promptForInt("Please select an account to send from: ");
+        accountToID = accountsTo[0].getAccountID();
 
         Transfer transfer = new Transfer();
         transfer.setAccountFrom(accountFromID);
-        transfer.setAccountTo(accountsTo[0].getAccountID());
+        transfer.setAccountTo(accountToID);
         transfer.setAmount(amount);
         transfer.setTransferStatus(transferStatusId);
         transfer.setTransferType(transferTypeId);

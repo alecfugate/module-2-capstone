@@ -2,6 +2,7 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,7 +20,7 @@ public class TransferService {
     private RestTemplate restTemplate = new RestTemplate();
 
     public TransferService(String url) {
-        this.baseUrl = url;
+        this.baseUrl = url + "transfers";
     }
 
     public String createTransfer(AuthenticatedUser authenticatedUser, Transfer transfer) {
@@ -28,7 +29,7 @@ public class TransferService {
         headers.setBearerAuth(authenticatedUser.getToken());
         HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
 
-        String url = baseUrl + "/transfers/" + transfer.getTransferID();
+        String url = baseUrl + "/send_to/" + transfer.getTransferID();
         String message = "";
         if(transfer.getTransferType()==2) {
             message = "Your transfer is complete.";
@@ -38,6 +39,7 @@ public class TransferService {
         }
 
         try {
+            BasicLogger.log(transfer.toString());
             restTemplate.exchange(url, HttpMethod.POST, entity, Transfer.class);
         } catch(RestClientResponseException e) {
             if (e.getMessage().contains("Insufficient Funds")) {
@@ -57,7 +59,7 @@ public class TransferService {
         headers.setBearerAuth(authenticatedUser.getToken());
         HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
 
-        String url = baseUrl + "/transfers/" + transfer.getTransferID();
+        String url = baseUrl + "/update_status/" + transfer.getTransferID();
         String message = "Your transaction is complete";
 
         try {
