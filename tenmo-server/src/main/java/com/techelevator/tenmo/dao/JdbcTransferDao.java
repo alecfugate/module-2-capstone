@@ -2,8 +2,6 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
@@ -56,6 +54,8 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public List<Transfer> getPendingTransfersByUserId(int userId) {
+
+
         String sql = "SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, " +
                 "t.amount, tu_from.username AS from_username, tu_to.username AS to_username " +
                 "FROM transfer t " +
@@ -79,10 +79,8 @@ public class JdbcTransferDao implements TransferDao {
     }
 
     @Override
-    public Transfer getTransferById(int transferId){
-        String sql = "SELECT * from transfer" +
-                "WHERE transfer_id = ?";
-
+    public Transfer getTransferById(int transferId) {
+        String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferId);
         return mapRowToTransfer(result);
     }
@@ -130,4 +128,29 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
-}
+    public List getTransfersByStatusId(int statusId) {
+        List transfers = new ArrayList<>();
+        String sql = "SELECT * FROM transfer WHERE transferstatusid = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, statusId);
+        while (rows.next()) {
+            Transfer transfer = mapRowToTransfer(rows);
+            transfers.add(transfer);
+
+        }
+        return transfers;
+    }
+
+
+    public List<Transfer> getTransfersByTypeId(int typeId) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount " +
+                "FROM transfer WHERE transfer_type_id = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, typeId);
+        while (rows.next()) {
+            Transfer transfer = mapRowToTransfer(rows);
+            transfers.add(transfer);
+        }
+        return transfers;
+    }
+
+    }
