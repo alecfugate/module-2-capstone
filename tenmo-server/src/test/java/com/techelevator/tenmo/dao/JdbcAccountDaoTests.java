@@ -2,22 +2,15 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.exceptions.InsufficientFundsException;
 import com.techelevator.tenmo.model.Account;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 
 public class JdbcAccountDaoTests extends BaseDaoTests{
 
-    protected static final Account ACCOUNT_1 = new Account(1, 1, new BigDecimal("1000.00"));
-    protected static final Account ACCOUNT_2 = new Account(2, 2, new BigDecimal("2000.00"));
 
     private JdbcAccountDao sut;
 
@@ -28,52 +21,76 @@ public class JdbcAccountDaoTests extends BaseDaoTests{
     }
 
     @Test
-    public void getBalance_given_invalidId_returns_null(){
-        BigDecimal number = sut.getBalance(-1);
+    public void getBalance_given_invalidID_returns_empty_array(){
+        Account[] testList = sut.getBalance(-1);
+
+        Assert.assertEquals(0, testList.length);
+    }
+
+    @Test
+    public void getBalance_given_validID_returns_correct_list(){
+        Account[] testList = sut.getBalance(USER_1.getId());
+
+        Assert.assertEquals(3, testList.length);
+        Assert.assertEquals(ACCOUNT_1.getBalance(), testList[0].getBalance());
+        Assert.assertEquals(ACCOUNT_3.getBalance(), testList[1].getBalance());
+        Assert.assertEquals(ACCOUNT_4.getBalance(), testList[2].getBalance());
+    }
+
+    @Test
+    public void getBalanceByAccountID_given_invalidId_returns_null(){
+        BigDecimal number = sut.getBalanceByAccountID(-1);
 
         Assert.assertNull(number);
     }
 
     @Test
-    public void getBalance_returns_correct_balance(){
-        BigDecimal number = sut.getBalance(1);
+    public void getBalanceByAccountID_returns_correct_balance(){
+        BigDecimal number = sut.getBalanceByAccountID(ACCOUNT_1.getAccountId());
 
-        Assert.assertEquals(number, ACCOUNT_1.getBalance());
+        Assert.assertEquals(ACCOUNT_1.getBalance(), number);
     }
 
     @Test
-    public void getAccountByUserID_returns_null_given_invalidID(){
-        Account test = sut.getAccountByUserID(-1);
+    public void getAccountsByUserID_returns_empty_given_invalidID(){
+        Account[] test = sut.getAccountsByUserID(-1);
 
-        Assert.assertNull(test);
+        Assert.assertEquals(0, test.length);
     }
 
     @Test
-    public void getAccountByUserID_returns_account_given_validID(){
-        Account test = sut.getAccountByUserID(1);
+    public void getAccountsByUserID_returns_accounts_given_validID(){
+        Account[] test = sut.getAccountsByUserID(USER_1.getId());
 
-        Assert.assertEquals(ACCOUNT_1, test);
+        Assert.assertEquals(3, test.length);
+        Assert.assertEquals(ACCOUNT_1.getAccountId(), test[0].getAccountId());
+        Assert.assertEquals(ACCOUNT_3.getAccountId(), test[1].getAccountId());
+        Assert.assertEquals(ACCOUNT_4.getAccountId(), test[2].getAccountId());
     }
 
-    @Test(expected = InsufficientFundsException.class)
-    public void checkAndUpdateBalance_given_negative_value_throws_InsufficientFundsException() {
+    @Test//(expected = InsufficientFundsException.class)
+    public void checkBalance_given_negative_value_throws_InsufficientFundsException() {
+        boolean pass = false;
         try {
-            sut.checkAndUpdateBalance(new BigDecimal("3000.00"), 1, 2);
+            // Changed the input value as a negative number to test
+            sut.checkBalance(new BigDecimal("3000.00"), ACCOUNT_1.getAccountId());
+            //If the expected exception happens, it will skip to the catch
+            //otherwise big L
         } catch (InsufficientFundsException e) {
-            Assert.assertTrue(true);
+            pass = true;
         }
-        Assert.fail();
+        Assert.assertEquals(true, pass);
     }
 
     @Test
     public void checkAndUpdateBalance_correctly_updates_balance_of_both_accounts(){
         try{
-            sut.checkAndUpdateBalance(new BigDecimal("100.00"), 1, 2);
+            sut.updateBalanceTransfer(new BigDecimal(100.00), ACCOUNT_1.getAccountId(), ACCOUNT_2.getAccountId());
         } catch (InsufficientFundsException e){
             System.err.println("Welp. Something went wrong");
         }
-        Assert.assertEquals(new BigDecimal("900.00"), ACCOUNT_1.getBalance());
-        Assert.assertEquals(new BigDecimal("2100.00"), ACCOUNT_2.getBalance());
+        Assert.assertEquals(new BigDecimal("900.00"), sut.getBalanceByAccountID(ACCOUNT_1.getAccountId()));
+        Assert.assertEquals(new BigDecimal("2100.00"), sut.getBalanceByAccountID(ACCOUNT_2.getAccountId()));
     }
 
 

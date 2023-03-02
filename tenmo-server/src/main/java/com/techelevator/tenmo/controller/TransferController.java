@@ -10,11 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
+@RequestMapping(path = "/transfers")
 public class TransferController {
 
     @Autowired
@@ -25,45 +25,50 @@ public class TransferController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(path="/transfers", method = RequestMethod.GET)
+    @GetMapping
     public List<Transfer> getAllTransfersForUser(@PathVariable int id) {
         return transferDao.getAllTransfersForUser(id);
     }
 
-    @RequestMapping(path="/transfers/{id}", method = RequestMethod.GET)
+    @GetMapping(path = "/{id}")
     public Transfer getTransferByTransferId(@PathVariable int id) {
         return transferDao.getTransferById(id);
     }
 
-    @RequestMapping(path="/transfers/user/{userId}", method = RequestMethod.GET)
+    @GetMapping(path = "/user/{userId}")
     public List<Transfer> getTransferByUserId(@PathVariable int userId) {
         return transferDao.getAllTransfersForUser(userId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path="/transfers/{id}", method = RequestMethod.POST)
+    @PostMapping(path = "/send_to/{id}")
     public void addTransfer(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFundsException {
 
-        if(transfer.getTransferStatusId()==2) {
+        if(transfer.getTransferStatus()==2) {
             // only update balance if it is approved
             // check balance from account and update BALANCE for both account
-            accountDao.checkAndUpdateBalance(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
+            if (accountDao.checkBalance(transfer.getAmount(), transfer.getAccountFrom())) {
+                accountDao.updateBalanceTransfer(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
+            }
         }
         transferDao.createTransfer(transfer);
     }
 
-    @RequestMapping(path="/transfers/user/{userId}/pending", method = RequestMethod.GET)
+    @GetMapping(path = "/user/{userId}/pending")
     public List<Transfer> getPendingTransfersByUserId(@PathVariable int userId) {
         return transferDao.getPendingTransfersByUserId(userId);
     }
 
-    @RequestMapping(path="/transfers/{id}", method = RequestMethod.PUT)
+    @PutMapping(path = "update_status/{id}")
     public void updateTransferStatus(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFundsException {
 
-        if(transfer.getTransferStatusId() == 2) {
-            // only update balance if it is approved
+        // only update balance if it is approved
+        if(transfer.getTransferStatus() == 2) {
+
             // check balance from account and update BALANCE for both account
-            accountDao.checkAndUpdateBalance(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
+            if (accountDao.checkBalance(transfer.getAmount(), transfer.getAccountFrom())) {
+                accountDao.updateBalanceTransfer(transfer.getAmount(), transfer.getAccountFrom(), transfer.getAccountTo());
+            }
         }
         // update transfer status APPROVED or REJECTED
         transferDao.updateTransfer(transfer);

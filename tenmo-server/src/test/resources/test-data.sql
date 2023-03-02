@@ -75,4 +75,10 @@ INSERT INTO tenmo_user (username,password_hash,role) VALUES ('user1','user1','RO
 INSERT INTO tenmo_user (username,password_hash,role) VALUES ('user2','user2','ROLE_USER'); -- 1002
 INSERT INTO tenmo_user (username,password_hash,role) VALUES ('user3','user3','ROLE_USER');
 
+INSERT INTO account (user_id, balance) VALUES (1001, 1000.00); --2001
+INSERT INTO account (user_id, balance) VALUES (1002, 2000.00); --2002
+INSERT INTO account (user_id, balance) VALUES (1001, 500.00); --2003
+INSERT INTO account (user_id, balance) VALUES (1001, 750.00); --2004
+
+
 COMMIT TRANSACTION;

@@ -1,23 +1,18 @@
 package com.techelevator.tenmo.model;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
-
 
 public class Account {
 
     private int accountId;
-    @NotBlank(message = "Must have a user ID associated with the account")
-    @Min(message = "User IDs begin at 1001", value = 1001)
     private int userId;
-    @NotBlank(message = "Balance cannot be blank or empty")
     private BigDecimal balance;
 
     public Account(){}
-    public Account(int account_id, int user_id, BigDecimal balance){
-        this.accountId = account_id;
-        this.userId = user_id;
+
+    public Account(int accountId, int userId, BigDecimal balance){
+        this.accountId = accountId;
+        this.userId = userId;
         this.balance = balance;
     }
 
@@ -33,8 +28,8 @@ public class Account {
         return userId;
     }
 
-    public void setUserId(int user_id) {
-        this.userId = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public BigDecimal getBalance() {
