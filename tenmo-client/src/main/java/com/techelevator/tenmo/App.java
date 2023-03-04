@@ -11,19 +11,18 @@ import com.techelevator.util.BasicLogger;
 import java.math.BigDecimal;
 
 public class App {
+    // Handles all user interactivity
 
     private static final String API_BASE_URL = "http://localhost:8080/";
+    private AuthenticatedUser currentUser;
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
-
-    private AuthenticatedUser currentUser;
-
     private AccountService accountService = new AccountService(API_BASE_URL);
-
     private TransferService transferService = new TransferService(API_BASE_URL);
-
     private UserService userService = new UserService(API_BASE_URL);
+
+    // DEBUGGING
     private BasicLogger logger = new BasicLogger();
 
 
@@ -98,17 +97,18 @@ public class App {
         }
     }
 
+    // Includes coding for users with multiple accounts
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
         Account[] balances = accountService.getBalance(currentUser);
         BigDecimal total = new BigDecimal(0);
         for(Account account: balances) {
             System.out.println("Account Number: " + account.getAccountId() + "\t\tBalance: $" + account.getBalance());
+            total.add(account.getBalance());
         }
+
         System.out.println("\n\nTotal Balance: " + total);
     }
-
-
 
     private void viewTransferHistory() {
         Transfer[] transfers = transferService.getTransfersFromUserId(currentUser);
@@ -119,7 +119,7 @@ public class App {
 
         System.out.println("--------------------------------------------");
         System.out.println("Transfer History");
-        System.out.println("ID             From/To               Amount");
+        System.out.println("ID\t\t\tFrom/To\t\t\tAmount");
         System.out.println("--------------------------------------------");
 
         for(Transfer transfer: transfers) {
@@ -152,7 +152,7 @@ public class App {
 
         System.out.println("-------------------------------------------");
         System.out.println("Pending Transfers");
-        System.out.println("ID          To                     Amount");
+        System.out.println("ID\t\t\tTo\t\t\t\tAmount");
         System.out.println("-------------------------------------------");
         for (Transfer transfer : transfers) {
             String fromOrTo;
@@ -173,7 +173,7 @@ public class App {
         int transferIdChoice = consoleService.getUserInputInteger("\nPlease enter transfer ID to approve/reject (0 to cancel)");
         Transfer transferChoice = validateTransferIdChoice(transferIdChoice, transfers, currentUser);
         if (transferChoice != null) {
-            approveOrReject(transferChoice, currentUser);
+            approveOrRejectTransfer(transferChoice, currentUser);
         }
     }
 
@@ -184,7 +184,10 @@ public class App {
 
         int userIdChoice = consoleService.getUserInputInteger("Enter ID of user you are sending to (0 to cancel)");
         if (validateUserChoice(userIdChoice, users, currentUser)) {
+            //DEBUGGING
             BasicLogger.log("[DEBUG]\t-App.sendBucks-\tUserID to send bucks: " + userIdChoice);
+
+
             BigDecimal amountChoice = new BigDecimal(consoleService.getUserInputDouble("Enter amount"));
             createTransfer(userIdChoice, amountChoice, 2, 2);
 
@@ -202,7 +205,6 @@ public class App {
 
         }
     }
-
 
     private void printTransferForUser(AuthenticatedUser authenticatedUser, Transfer transfer) {
         String fromOrTo;
@@ -223,7 +225,7 @@ public class App {
 
         System.out.println("-------------------------------");
         System.out.println("Users");
-        System.out.println("ID            Name");
+        System.out.println("ID\t\tName");
         System.out.println("-------------------------------");
 
         // list of user, not display current user
@@ -314,6 +316,7 @@ public class App {
         consoleService.getUserInput("\nPress Enter to continue");
     }
 
+    // Current user
     private boolean isMe(AuthenticatedUser currentUser, String userName) {
         return currentUser.getUser().getUsername().equals(userName);
     }
@@ -340,8 +343,7 @@ public class App {
         return transferChoice;
     }
 
-    private void approveOrReject(Transfer pendingTransfer, AuthenticatedUser authenticatedUser) {
-        //method to approve or reject transfer
+    private void approveOrRejectTransfer(Transfer pendingTransfer, AuthenticatedUser authenticatedUser) {
         consoleService.printApproveOrRejectOptions();
         int choice = consoleService.getUserInputInteger("Please choose an option");
 

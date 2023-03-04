@@ -92,8 +92,6 @@ public class TransferService {
         return transfers;
     }
 
-
-
     public Transfer[] getPendingTransfersByUserId(AuthenticatedUser authenticatedUser) {
         Transfer[] transfers = null;
         try {

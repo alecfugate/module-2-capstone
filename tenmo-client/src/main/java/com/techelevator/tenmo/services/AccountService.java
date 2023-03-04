@@ -16,6 +16,9 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AccountService {
 
+    // Performs CRUD operations in Account
+    // Uses Authentication to limit non-user activity
+
     private final String baseUrl;
     private RestTemplate restTemplate;
 
@@ -23,7 +26,6 @@ public class AccountService {
         this.restTemplate = new RestTemplate();
         this.baseUrl = baseURL + "account";
     }
-
 
     //TODO: Running into an issue where the restTemplate is returning 0 for AccountID and UserID
     public Account[] getBalance(AuthenticatedUser authenticatedUser) {
@@ -36,16 +38,20 @@ public class AccountService {
                     entity,
                     Account[].class
             ).getBody();
+
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
             System.out.println("Server network issue. Please try again.");
         }
+
+        // DEBUGGING
         if (accounts != null) {
             for (Account account : accounts) {
                 BasicLogger.log("[DEBUG]\t-AccountService.getBalance()-\tAccount Info Retrieved: " + account.toString());
             }
         }
+
         return accounts;
     }
 
@@ -57,6 +63,7 @@ public class AccountService {
                     HttpMethod.GET,
                     createHttpEntity(authenticatedUser),
                     Account[].class).getBody();
+
         } catch(RestClientResponseException e) {
             System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
         } catch(ResourceAccessException e) {
@@ -66,6 +73,7 @@ public class AccountService {
         return accounts;
     }
 
+    // Authorization token use
     private HttpEntity<Void> createHttpEntity(AuthenticatedUser authenticatedUser) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(authenticatedUser.getToken());

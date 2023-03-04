@@ -93,5 +93,23 @@ public class JdbcAccountDaoTests extends BaseDaoTests{
         Assert.assertEquals(new BigDecimal("2100.00"), sut.getBalanceByAccountID(ACCOUNT_2.getAccountId()));
     }
 
+    @Test
+    public void addAccount_correctly_updates(){
+        try{
+            sut.addAccount(new Account(666, USER_1.getId(), new BigDecimal("1000")));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            Assert.fail("Exception found");
+        }
+    }
+
+//    @Test
+//    public void deleteAccount_does_its_job(){
+//        //Account account = new Account(123, 123, new BigDecimal("1000"));
+//        //sut.addAccount(account);
+//        if(!sut.deleteAccount(account.getUserId())){
+//            Assert.fail("Account not deleted");
+//        }
+//    }
 
 }

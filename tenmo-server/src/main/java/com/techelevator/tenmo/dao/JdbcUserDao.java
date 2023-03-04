@@ -16,6 +16,10 @@ import java.util.List;
 @Component
 public class JdbcUserDao implements UserDao {
 
+    // Starting code provided by Sadiq Manij and Merit America
+    // Handles creation of users and account services for application
+    // Uses CRUD operations for the User Table
+
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
     private final JdbcTemplate jdbcTemplate;
 
@@ -96,6 +100,7 @@ public class JdbcUserDao implements UserDao {
         return true;
     }
 
+    // Creates access for User table
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();
         user.setId(rs.getInt("user_id"));

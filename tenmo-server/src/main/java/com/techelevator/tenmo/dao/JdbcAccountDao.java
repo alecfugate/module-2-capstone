@@ -17,24 +17,14 @@ import java.util.List;
 @Repository
 public class JdbcAccountDao implements AccountDao {
 
+    // Performs CRUD operations in the Account Table
+    // Validates information from user
+
     private JdbcTemplate jdbcTemplate;
     Logger logger = LoggerFactory.getLogger(JdbcAccountDao.class);
-
     public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-//    @Override
-//    public BigDecimal getBalance(long userId) {
-//        String sqlFindBalanceById= "SELECT balance FROM account WHERE user_id = ?";
-//        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlFindBalanceById,userId);
-//        BigDecimal balance = new BigDecimal(0.00);
-//        while (results.next()){
-//            balance = results.getBigDecimal("balance");
-//        }
-//
-//        return balance;
-//    }
 
     @Override
     public BigDecimal getBalanceByAccountID(long accountId) {
@@ -60,6 +50,7 @@ public class JdbcAccountDao implements AccountDao {
             Account[] accounts = new Account[decimalList.size()];
             decimalList.toArray(accounts);
 
+            // DEBUGGING
             if(accounts.length > 0) {
                 logger.info("getBalance called by: " + userID);
                 logger.info("returned account array of size: " + accounts.length);
@@ -71,7 +62,6 @@ public class JdbcAccountDao implements AccountDao {
             return null;
         }
     }
-
 
     @Override
     public void updateBalance(long userId, BigDecimal amount) {
@@ -89,7 +79,6 @@ public class JdbcAccountDao implements AccountDao {
             return null;
         }
     }
-
     @Override
     public Account[] getAccountsByUserID(long userId) {
         List<Account> accountList = new ArrayList<>();
@@ -105,6 +94,8 @@ public class JdbcAccountDao implements AccountDao {
         return accountArray;
     }
 
+    // Handles the information in a transfer of balances
+    // Will throw exception if the amounts cause logic error
     @Override
     @Transactional
     public void updateBalanceTransfer(BigDecimal amount, int accountIdFrom, int accountIdTo) throws  InsufficientFundsException{
@@ -119,6 +110,7 @@ public class JdbcAccountDao implements AccountDao {
         jdbcTemplate.update(sql, amount, accountIdTo);
     }
 
+    // Validates the balance of account
     public boolean checkBalance(BigDecimal amount, int accountIdFrom) throws InsufficientFundsException {
         String sql = "SELECT (balance >= ?) as is_valid " +
                 "FROM account " +
@@ -131,21 +123,21 @@ public class JdbcAccountDao implements AccountDao {
             }
     }
 
-    //
-    // New stuff
-    //
-    /* May not be necessary using variable constraints on Transfer.class */
-    public boolean checkAmount(BigDecimal amount) throws InsufficientFundsException{
-        //Checks the signum of the given amount, if it's negative it will throw an exception
-        // signum will check the inverse state of number so +/0/- or literally 1/0/-1
-        if(amount.signum() == -1 || amount.signum() == 0){
-            throw new InsufficientFundsException();
-        } else {
-            return true;
-        }
+    @Override
+    public int addAccount(Account account){
+        String sql = "INSERT INTO account (account_id, user_id, balance) VALUES (DEFAULT, ?, ?)";
+        return jdbcTemplate.update(sql, account.getUserId(), account.getBalance());
+
     }
 
+//    @Override
+//    public boolean deleteAccount(long user_id){
+//        String sql = "DELETE FROM account WHERE user_id = ?";
+//        return jdbcTemplate.update(sql, user_id) == 1;
+//    }
 
+
+    // Account reference for access in Account table
     private Account mapRowToAccount(SqlRowSet rs) {
         Account account = new Account();
         account.setAccountId(rs.getInt("account_id"));

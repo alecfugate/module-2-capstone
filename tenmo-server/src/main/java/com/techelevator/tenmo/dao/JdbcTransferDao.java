@@ -12,13 +12,14 @@ import java.util.List;
 
 @Repository
 public class JdbcTransferDao implements TransferDao {
+    //
+    // Performs CRUD operations using Transfer table
+    //
 
     private JdbcTemplate jdbcTemplate;
-
     public JdbcTransferDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     @Override
     public List<Transfer> getAllTransfers() {
@@ -54,8 +55,6 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public List<Transfer> getPendingTransfersByUserId(int userId) {
-
-
         String sql = "SELECT t.transfer_id, t.transfer_type_id, t.transfer_status_id, t.account_from, t.account_to, " +
                 "t.amount, tu_from.username AS from_username, tu_to.username AS to_username " +
                 "FROM transfer t " +
@@ -89,7 +88,10 @@ public class JdbcTransferDao implements TransferDao {
     public Transfer createTransfer(Transfer transfer) {
         String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
                 "VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
-//        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        // Connection and PreparedStatement: uses pre-compiled SQL to reduce hardcoded SQL
+        // in this case, it is using setInt as a parameterized query
+        // Using PreparedStatement can also limit the risk of malicious injection
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, transfer.getTransferType());
@@ -99,11 +101,32 @@ public class JdbcTransferDao implements TransferDao {
             ps.setBigDecimal(5, transfer.getAmount());
             return ps;
         });
-//
-//        int transferId = keyHolder.getKey().intValue();
-//        transfer.setTransferId(transferId);
 
         return transfer;
+    }
+
+    public List getTransfersByStatusId(int statusId) {
+        List transfers = new ArrayList<>();
+        String sql = "SELECT * FROM transfer WHERE transfer_status_id = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, statusId);
+        while (rows.next()) {
+            Transfer transfer = mapRowToTransfer(rows);
+            transfers.add(transfer);
+
+        }
+        return transfers;
+    }
+
+    public List<Transfer> getTransfersByTypeId(int typeId) {
+        List<Transfer> transfers = new ArrayList<>();
+        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount " +
+                "FROM transfer WHERE transfer_type_id = ?";
+        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, typeId);
+        while (rows.next()) {
+            Transfer transfer = mapRowToTransfer(rows);
+            transfers.add(transfer);
+        }
+        return transfers;
     }
 
     @Override
@@ -128,29 +151,6 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
-    public List getTransfersByStatusId(int statusId) {
-        List transfers = new ArrayList<>();
-        String sql = "SELECT * FROM transfer WHERE transferstatusid = ?";
-        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, statusId);
-        while (rows.next()) {
-            Transfer transfer = mapRowToTransfer(rows);
-            transfers.add(transfer);
-
-        }
-        return transfers;
-    }
 
 
-    public List<Transfer> getTransfersByTypeId(int typeId) {
-        List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount " +
-                "FROM transfer WHERE transfer_type_id = ?";
-        SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, typeId);
-        while (rows.next()) {
-            Transfer transfer = mapRowToTransfer(rows);
-            transfers.add(transfer);
-        }
-        return transfers;
-    }
-
-    }
+}

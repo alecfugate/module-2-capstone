@@ -1,0 +1,29 @@
+2023-03-03T21:01:54.8799707 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2001	User ID: 1001	Balance: 1000.00
+2023-03-03T21:03:54.9873007 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2001	User ID: 1001	Balance: 1000.00
+2023-03-03T21:04:41.6266245 [DEBUG]	-App.sendBucks-	UserID to send bucks: 1001
+2023-03-03T21:04:44.6591538 [DEBUG]	 -App.createTransfer()- 	Account ID: 2001	User ID: 1001	Balance: 1000.00
+2023-03-03T21:04:44.672394 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2002	User ID: 1002	Balance: 1000.00
+2023-03-03T21:04:53.8373999 Transfer ID: 0
+Transfer Type: 2 - null
+Transfer Status: 2 - null
+Account ID From: 2002
+Account ID To: 2001
+Amount to Transfer: 400
+2023-03-03T21:06:28.8636149 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2001	User ID: 1001	Balance: 1400.00
+2023-03-03T21:07:20.3027794 [DEBUG]	-App.sendBucks-	UserID to send bucks: 1002
+2023-03-03T21:07:34.0015889 [DEBUG]	 -App.createTransfer()- 	Account ID: 2002	User ID: 1002	Balance: 600.00
+2023-03-03T21:07:34.013803 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2001	User ID: 1001	Balance: 1400.00
+2023-03-03T21:07:42.84874 Transfer ID: 0
+Transfer Type: 2 - null
+Transfer Status: 2 - null
+Account ID From: 2001
+Account ID To: 2002
+Amount to Transfer: 100000
+2023-03-03T21:08:25.132771 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2001	User ID: 1001	Balance: 1400.00
+2023-03-03T21:08:29.83832 Transfer ID: 0
+Transfer Type: 1 - null
+Transfer Status: 1 - null
+Account ID From: 2002
+Account ID To: 2001
+Amount to Transfer: 300
+2023-03-03T21:09:48.5711592 [DEBUG]	-AccountService.getBalance()-	Account Info Retrieved: Account ID: 2002	User ID: 1002	Balance: 300.00
