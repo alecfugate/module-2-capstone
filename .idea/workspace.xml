@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aecf2684-a09a-4675-ba27-7774fcadf603" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tenmo-server/src/test/java/com/techelevator/tenmo/dao/TransferControllerIntTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tenmo-server/src/test/java/com/techelevator/tenmo/dao/TransferControllerIntTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tenmo-server/src/test/java/com/techelevator/tenmo/dao/TransferControllerIntTests.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,14 +49,14 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/Owner/Desktop/meritamer/repos2/brett-jackson-student-exercises/14_Server_Side_APIs_Part_2",
+    "last_opened_file_path": "C:/Users/Owner/Desktop/meritamer/capstone/module-2-capstone",
     "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.runner"
+    "settings.editor.selected.configurable": "advanced.settings"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.TransferControllerIntTests">
+  <component name="RunManager" selected="JUnit.TransferControllerIntTest">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.App" />
       <module name="m02-capstone-client" />
@@ -84,22 +83,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="JdbcAccountDaoTests.addAccount_correctly_updates" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="m02-capstone-server" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.techelevator.tenmo.dao.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.techelevator.tenmo.dao" />
-      <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.dao.JdbcAccountDaoTests" />
-      <option name="METHOD_NAME" value="addAccount_correctly_updates" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="JdbcAccountDaoTests.deleteAccount_does_its_job" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="m02-capstone-server" />
       <extension name="coverage">
@@ -112,6 +95,21 @@
       <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.dao.JdbcAccountDaoTests" />
       <option name="METHOD_NAME" value="deleteAccount_does_its_job" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TransferControllerIntTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="m02-capstone-server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.techelevator.tenmo.dao.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.techelevator.tenmo.dao" />
+      <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.dao.TransferControllerIntTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -133,11 +131,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TransferControllerIntTest" />
         <item itemvalue="JUnit.TransferControllerIntTests" />
         <item itemvalue="Application.App" />
         <item itemvalue="Application.TenmoApplication" />
         <item itemvalue="JUnit.JdbcAccountDaoTests.deleteAccount_does_its_job" />
-        <item itemvalue="JUnit.JdbcAccountDaoTests.addAccount_correctly_updates" />
       </list>
     </recent_temporary>
   </component>
@@ -157,7 +155,13 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

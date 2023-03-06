@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.math.BigDecimal;
@@ -23,37 +24,42 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
-public class TransferControllerIntTests {
+public class TransferControllerIntTest {
 
-    @Autowired
-    TransferController controller;
+        // @Mock or MockInject
+        @Autowired
+        TransferController controller;
 
-    @Autowired
-    ObjectMapper mapper;
+        @Autowired
+        ObjectMapper mapper;
 
-    MockMvc mockMvc;
+        MockMvc mockMvc;
 
-    @Before
-    public void setUp() throws Exception {
+        @Before
+        public void setUp() throws Exception {
         System.out.println("setup()...");
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
-    @Test
-    public void create_ValidTransfer_ShouldAddNewTransfer() throws Exception {
+        @Test
+        public void create_ValidTransfer_ShouldAddNewTransfer() throws Exception {
         final Transfer transfer = new Transfer(3001, 1, 1, 1001, 1002, new BigDecimal("350.00"));
 
-        mockMvc.perform(post("/transfers")
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/send_to/{id}", 1001)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(transfer)))
+                        .content(mapper.writeValueAsString(transfer))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
     }
 
-    @Test
-    public void create_InvalidTransfer_ShouldNotBeCreated() throws Exception {
-        final Transfer transfer = new Transfer(3001, 1, 1, 1001, 1002, new BigDecimal("350.00")); // enter parameters
+                    // enter no values
+        @Test
+        public void create_InvalidTransfer_ShouldNotBeCreated() throws Exception {
+        final Transfer transfer = new Transfer(0, 0, 0, 0, 0, new BigDecimal(""));
 
         mockMvc.perform(post("/transfers")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -61,11 +67,11 @@ public class TransferControllerIntTests {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    public void update_ValidTransfer_ShouldUpdateExistingTransfer() throws Exception {
+        @Test
+        public void update_ValidTransfer_ShouldUpdateExistingTransfer() throws Exception {
         final Transfer transfer = new Transfer(3001, 1, 1, 1001, 1002, new BigDecimal("350.00"));
 
-    //    transfer.  (); // call something
+        //    transfer.  (); // call something
 
         mockMvc.perform(put("/transfers" + transfer.getTransferId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -74,19 +80,19 @@ public class TransferControllerIntTests {
                 .andExpect(jsonPath("$.title").value("MY_NEW_TITLE"));  // not sure expression and expected value
     }
 
-    @Test
-    public void update_InvalidTransferShouldNotBeUpdated() throws Exception {
+        @Test
+        public void update_InvalidTransferShouldNotBeUpdated() throws Exception {
         final Transfer transfer = new Transfer(3001, 1, 1, 1001, 1002, new BigDecimal("350.00"));
 
-    //    transfer.("");  // call something
+        //    transfer.("");  // call something
 
         mockMvc.perform(put("/transfers" + transfer.getTransferId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(transfer))).andExpect(status().isBadRequest());
     }
 
-    @Test
-    public void update_InvalidTransferId_ShouldReturnNotFound() throws Exception {
+        @Test
+        public void update_InvalidTransferId_ShouldReturnNotFound() throws Exception {
         final Transfer transfer = new Transfer(3001, 1, 1, 1001, 1002, new BigDecimal("350.00"));
 
         mockMvc.perform(put("/transfers/99")
@@ -95,8 +101,8 @@ public class TransferControllerIntTests {
                 .andExpect(status().isNotFound());
     }
 
-    @Test
-    public void delete_ShouldReturnNoContent() throws Exception {
+        @Test
+        public void delete_ShouldReturnNoContent() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/transfers")).andReturn();
         String content = mvcResult.getResponse().getContentAsString();
         List<Transfer> allTransfers = mapper.readValue(content,List.class);
@@ -107,7 +113,7 @@ public class TransferControllerIntTests {
                 .andExpect(jsonPath("$", IsCollectionWithSize.hasSize(allTransfers.size()-1)));
     }
 
-    private String toJson(Transfer transfer) throws JsonProcessingException {
+        private String toJson(Transfer transfer) throws JsonProcessingException {
         return mapper.writeValueAsString(transfer);
     }
 
