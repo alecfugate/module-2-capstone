@@ -183,31 +183,6 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
         }
     }
 
-//    @Test
-//    public void updateTransferwithInvalidStatusIdthrowsException() {
-//        Transfer transfer = new Transfer();
-//        transfer.setTransferId(1);
-//        //transfer.setTransferStatusId(0);
-//        try {
-//            sut.updateTransfer(transfer);
-//        } catch (DataAccessException e) {
-//            assertThrows(DataAccessException.class, () -> sut.updateTransfer(transfer),
-//                    "Should throw a DataAccessException if the transfer status ID is invalid.");
-//        }
-//    }
-
-//    @Test
-//    public void getTransfersByTypeId_returnsCorrectType() {
-//            try {
-//                List<Transfer> transfers = sut.getTransfersByTypeId(1);
-//                assertEquals("Request", transfers.get(0).getTransferTypeId());
-//
-//                transfers = sut.getTransfersByTypeId(2);
-//                assertEquals("Send", transfers.get(0).getTransferTypeId());
-//            } catch (Exception e) {
-//                System.err.println(e.getMessage());
-//            }
-//        }
 
     @Test
     public void getTransferTypeById_withInvalidId_returnsNull() {
@@ -227,26 +202,27 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
     @Test
     public void getTransferStatusById_returnsCorrectStatus() {
         try {
-            assertEquals("Pending", sut.getTransfersByStatusId(1));
-            assertEquals("Approved", sut.getTransfersByStatusId(2));
-            assertEquals("Rejected", sut.getTransfersByStatusId(3));
+            List<Transfer> pendingTransfers = sut.getTransfersByStatusId(1);
+            List<Transfer> approvedTransfers = sut.getTransfersByStatusId(2);
+            List<Transfer> rejectedTransfers = sut.getTransfersByStatusId(3);
+
+            assertEquals("Pending", pendingTransfers.get(0).getTransferStatus());
+            assertEquals("Approved", approvedTransfers.get(0).getTransferStatus());
+            assertEquals("Rejected", rejectedTransfers.get(0).getTransferStatus());
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
     }
+
 
     @Test
     public void getTransferStatusByIdwithInvalidIdreturnsNull() {
-        try {
-            assertNull(sut.getTransfersByStatusId(0));
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        List<Transfer> transfers = sut.getTransfersByStatusId(0);
+        assertNull(transfers);
     }
+
+
+
+
+
 }
-
-
-
-
-
-

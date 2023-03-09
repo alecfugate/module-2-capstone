@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aecf2684-a09a-4675-ba27-7774fcadf603" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/dbnavigator.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tenmo-server/src/test/java/com/techelevator/tenmo/dao/TransferControllerIntTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/tenmo-server/src/test/java/com/techelevator/tenmo/controller/TransferControllerIntTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tenmo-client/m02-capstone-client.iml" beforeDir="false" afterPath="$PROJECT_DIR$/tenmo-client/m02-capstone-client.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tenmo-client/target/classes/com/techelevator/tenmo/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/tenmo-client/target/classes/com/techelevator/tenmo/App.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tenmo-client/target/classes/com/techelevator/tenmo/services/TransferService.class" beforeDir="false" afterPath="$PROJECT_DIR$/tenmo-client/target/classes/com/techelevator/tenmo/services/TransferService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tenmo-server/src/main/java/com/techelevator/tenmo/dao/JdbcTransferDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/tenmo-server/src/main/java/com/techelevator/tenmo/dao/JdbcTransferDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tenmo-server/src/test/java/com/techelevator/tenmo/dao/JdbcTransferDaoTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/tenmo-server/src/test/java/com/techelevator/tenmo/dao/JdbcTransferDaoTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,45 +49,52 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Owner/Desktop/meritamer/capstone/module-2-capstone&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "/Users/alecfugate/module-2-capstone",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "advanced.settings"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.techelevator.tenmo.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.TransferControllerIntTest">
-    <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.App" />
-      <module name="m02-capstone-client" />
+  <component name="RunManager">
+    <configuration name="JdbcTransferDaoTests.getTransferStatusById_returnsCorrectStatus" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="m02-capstone-server" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.techelevator.tenmo.*" />
+          <option name="PATTERN" value="com.techelevator.tenmo.dao.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="com.techelevator.tenmo.dao" />
+      <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.dao.JdbcTransferDaoTests" />
+      <option name="METHOD_NAME" value="getTransferStatusById_returnsCorrectStatus" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TenmoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.TenmoApplication" />
+    <configuration name="JdbcTransferDaoTests.getTransferStatusByIdwithInvalidIdreturnsNull" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="m02-capstone-server" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.techelevator.tenmo.*" />
+          <option name="PATTERN" value="com.techelevator.tenmo.dao.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="com.techelevator.tenmo.dao" />
+      <option name="MAIN_CLASS_NAME" value="com.techelevator.tenmo.dao.JdbcTransferDaoTests" />
+      <option name="METHOD_NAME" value="getTransferStatusByIdwithInvalidIdreturnsNull" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -134,11 +146,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.JdbcTransferDaoTests.getTransferStatusById_returnsCorrectStatus" />
+        <item itemvalue="JUnit.JdbcTransferDaoTests.getTransferStatusByIdwithInvalidIdreturnsNull" />
         <item itemvalue="JUnit.TransferControllerIntTest" />
         <item itemvalue="JUnit.TransferControllerIntTest (1)" />
         <item itemvalue="JUnit.TransferControllerIntTests" />
-        <item itemvalue="Application.App" />
-        <item itemvalue="Application.TenmoApplication" />
       </list>
     </recent_temporary>
   </component>

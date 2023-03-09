@@ -114,7 +114,7 @@ public class JdbcTransferDao implements TransferDao {
             transfers.add(transfer);
 
         }
-        return transfers;
+        return transfers.isEmpty() ? null : transfers;
     }
 
     public List<Transfer> getTransfersByTypeId(int typeId) {
