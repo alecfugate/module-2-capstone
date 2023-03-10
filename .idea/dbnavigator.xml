@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -12,7 +12,7 @@
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="68429118-0ca2-4658-91d5-946b2e504029">
+    <connection id="427c35d0-0a09-4aa8-967f-1e32111203be">
       <console name="Connection" type="STANDARD" schema="tenmo_test" session="Main" />
     </connection>
   </component>
@@ -39,7 +39,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="68429118-0ca2-4658-91d5-946b2e504029" active="true" signed="true">
+      <connection id="427c35d0-0a09-4aa8-967f-1e32111203be" active="true" signed="true">
         <database>
           <name value="Connection" />
           <description value="" />
